@@ -3,4 +3,14 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 class User(AbstractUser):
-    pass
+    first_name = None
+    last_name = None
+    fullname = models.CharField(max_length=50)
+    nickname = models.CharField(max_length=50, unique=True)
+    email = models.EmailField(unique=True)
+    birth = models.DateField()
+    adult_verification = models.BooleanField(default=False)
+    profile_image = models.ImageField(upload_to='profile_images/', blank=True)
+
+    def __str__(self):
+        return self.username
