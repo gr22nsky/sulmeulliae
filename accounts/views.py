@@ -46,6 +46,7 @@ class UserSigninView(APIView):
             }
         )
         
+        
 class UserProfileView(APIView):
     
     def get(self, request, username):
@@ -54,3 +55,26 @@ class UserProfileView(APIView):
         #User 객체 직렬화(JSON)
         serializer = UserSerializer(user)
         return Response(serializer.data)
+    
+
+class UserSignoutView(APIView):
+    def post(self, request):
+        pass
+    
+
+
+class UserPasswordUpdateView(APIView):
+    def post(self, request):
+        old_password = request.data.get("old_password")
+        new_password = request.data.get("new_password")
+        
+        if not request.user.check_password(old_password):
+            return Response(
+                {"message":"기존 비밀번호가 일치하지 않습니다."},
+                status=400,
+            )
+        
+        request.user.set_password(new_password)
+        request.user.save()
+        return Response()
+    
