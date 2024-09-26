@@ -3,13 +3,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from .models import User
 from .validators import validate_user_data
 from .serializers import UserSerializer
 
 
 class UserCreateView(APIView):
+    
+    permission_classes = [AllowAny]
+    
     def post(self, request):
         rlt_message = validate_user_data(request.data)
         if rlt_message is not None:
@@ -20,6 +23,9 @@ class UserCreateView(APIView):
 
         
 class UserSigninView(APIView):
+    
+    permission_classes = [AllowAny]
+    
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
@@ -41,7 +47,6 @@ class UserSigninView(APIView):
         )
         
 class UserProfileView(APIView):
-    permission_classes = [IsAuthenticated]
     
     def get(self, request, username):
         #유저조회
