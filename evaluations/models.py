@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.db.models import Avg
 
 # Create your models here.
 class Category(models.Model):
@@ -10,12 +11,11 @@ class Category(models.Model):
         return self.name
 
 class Size(models.Model):
-    size = models.IntegerField()
+    size = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
-
     def __str__(self):
         return self.size
-
+    
 class Origin(models.Model):
     name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -38,6 +38,7 @@ class Evaluation(models.Model):
     content = models.TextField()
     image = models.ImageField(upload_to='images/evaluation', blank=True)
     ABV = models.IntegerField()
+    avg_rating = models.FloatField(default=0)
     hit = models.PositiveBigIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -65,3 +66,13 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # 먼저 리뷰를 저장한 다음
+        # 평가에 대한 모든 리뷰의 평균 평점을 계산
+        average = self.evaluation.reviews.aggregate(Avg('rating'))['rating__avg']
+        # 평가의 average_rating 필드를 업데이트
+        self.evaluation.avg_rating = round(float(average), 2) if average is not None else 0
+        self.evaluation.save()
+
+    def __str__(self):
+        return self.content
