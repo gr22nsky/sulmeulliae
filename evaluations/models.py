@@ -39,7 +39,7 @@ class Evaluation(models.Model):
     image = models.ImageField(upload_to='images/evaluation', blank=True)
     ABV = models.IntegerField()
     avg_rating = models.FloatField(default=0)
-    hit = models.PositiveBigIntegerField(default=0)
+    viewcount = models.PositiveBigIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     # 중계테이블에서 가져오기
