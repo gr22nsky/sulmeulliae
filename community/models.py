@@ -40,6 +40,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
+    like = models.ManyToManyField(get_user_model(), related_name='comment_like',blank=True)
 
     def __str__(self):
         return self.content
