@@ -8,7 +8,7 @@ class User(AbstractUser):
     fullname = models.CharField(max_length=50)
     nickname = models.CharField(max_length=50, unique=True)
     email = models.EmailField(unique=True)
-    birth = models.DateField()
+    birth = models.DateField(null=True)
     adult_verification = models.BooleanField(default=False)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True)
 
