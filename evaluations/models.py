@@ -36,7 +36,6 @@ class Evaluation(models.Model):
     title = models.CharField(max_length=100)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='evaluation')
     content = models.TextField()
-    image = models.ImageField(upload_to='images/evaluation', blank=True)
     ABV = models.IntegerField()
     avg_rating = models.FloatField(default=0)
     viewcount = models.PositiveBigIntegerField(default=0)
@@ -50,6 +49,13 @@ class Evaluation(models.Model):
     def __str__(self):
         return self.title
     
+def image_upload_path(instance, filename):
+    return f'{instance.evaluation.id}/{filename}'
+
+class EvaluationImage(models.Model):
+    evaluation = models.ForeignKey(Evaluation, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to=image_upload_path)
+
 class Review(models.Model):
     ratings = [
         ('5', '★★★★★'),
@@ -67,10 +73,8 @@ class Review(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)  # 먼저 리뷰를 저장한 다음
-        # 평가에 대한 모든 리뷰의 평균 평점을 계산
+        super().save(*args, **kwargs)
         average = self.evaluation.reviews.aggregate(Avg('rating'))['rating__avg']
-        # 평가의 average_rating 필드를 업데이트
         self.evaluation.avg_rating = round(float(average), 2) if average is not None else 0
         self.evaluation.save()
 
