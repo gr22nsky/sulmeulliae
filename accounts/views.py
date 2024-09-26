@@ -3,15 +3,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import User
 from .validators import validate_user_data
 from .serializers import UserSerializer
 
 
 class UserCreateView(APIView):
-    
-    permission_classes = [AllowAny]
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [AllowAny()]
+        return [IsAuthenticated()]
     
     def post(self, request):
         rlt_message = validate_user_data(request.data)
@@ -20,7 +22,19 @@ class UserCreateView(APIView):
         
         user = User.objects.create_user(**request.data)
         return Response({"message":"가입을 환영합니다."},status=200)
-
+    
+    #회원탈퇴
+    def delete(self, request):
+        old_password = request.data.get("old_password")
+        if not request.user.check_password(old_password):
+            return Response(
+                {"message":"기존 비밀번호가 일치하지 않습니다."},
+                status=400,
+            )
+        
+        request.user.delete()
+        return Response()
+        
         
 class UserSigninView(APIView):
     
@@ -77,4 +91,7 @@ class UserPasswordUpdateView(APIView):
         request.user.set_password(new_password)
         request.user.save()
         return Response()
-    
+
+
+
+        
