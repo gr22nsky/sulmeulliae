@@ -38,7 +38,8 @@ class Evaluation(models.Model):
     content = models.TextField()
     ABV = models.IntegerField()
     avg_rating = models.FloatField(default=0)
-    viewcount = models.PositiveBigIntegerField(default=0)
+    viewcounts = models.PositiveBigIntegerField(default=0)
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='like_evaluation')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     # 중계테이블에서 가져오기
@@ -69,9 +70,9 @@ class Review(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews')
     content = models.TextField()
     rating = models.CharField(max_length=1, choices=ratings)
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='like_review')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         average = self.evaluation.reviews.aggregate(Avg('rating'))['rating__avg']

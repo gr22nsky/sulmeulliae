@@ -6,13 +6,13 @@ from.models import Evaluation, Review
 from.serializers import EvaluationSerializer, ReviewSerializer
 
 # Create your views here.
-class EvaluationListView(APIView):
+class EvaluationListAPIView(APIView):
     def get(self, request):
         evaluations = Evaluation.objects.all()
         serializer = EvaluationSerializer(evaluations, many=True)
         return Response(serializer.data)
     
-class EvaluationDetailView(APIView):
+class EvaluationDetailAPIView(APIView):
     # permission_classes = [IsAuthenticated]
     def get(self, request, pk):
         evaluation = get_object_or_404(Evaluation, pk=pk)
@@ -22,8 +22,25 @@ class EvaluationDetailView(APIView):
         serializer = EvaluationSerializer(evaluation)
         return Response(serializer.data)
     
-class ReviewListView(APIView):
+class EvaluationLikeAPIView(APIView):
     
+    def post(self, request, pk):
+        evaluation = get_object_or_404(Evaluation, pk=pk)
+        user = request.user
+        if evaluation.like.filter(pk=user.pk).exists():
+            evaluation.like.remove(user)
+        else:
+            evaluation.like.add(user)
+        return Response(status=200)
+
+class UserLikedEvaluationAPIView(APIView):
+    def get(self, request):
+        user = request.user
+        evaluations = user.like_evaluation.all()
+        serializer = EvaluationSerializer(evaluations, many=True)
+        return Response(serializer.data)
+    
+class ReviewListAPIView(APIView):
     def get_object(self, pk):
         return get_object_or_404(Evaluation, pk=pk)
     
@@ -41,8 +58,7 @@ class ReviewListView(APIView):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
     
-class ReviewDetailView(APIView):
-    
+class ReviewDetailAPIView(APIView):
     def get_object(self, pk):
         return get_object_or_404(Review, pk=pk)
     
@@ -57,3 +73,22 @@ class ReviewDetailView(APIView):
         review = self.get_object(pk)
         review.delete()
         return Response(status=204)
+    
+class ReviewLikeAPIView(APIView):
+    
+    def post(self, request, pk):
+        review = get_object_or_404(Review, pk=pk)
+        user = request.user
+        
+        if review.like.filter(pk=user.pk).exists():
+            review.like.remove(user)
+        else:
+            review.like.add(user)
+        return Response(status=200)
+
+class UserLikedReviewAPIView(APIView):
+    def get(self, request):
+        user = request.user
+        reviews = user.like_review.all()
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data)

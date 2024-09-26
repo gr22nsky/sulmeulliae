@@ -11,6 +11,7 @@ class ImageSerializer(serializers.ModelSerializer):
         
 class EvaluationSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, read_only=True)
+    like_count = serializers.SerializerMethodField()
     class Meta:
         model = models.Evaluation
         fields = '__all__'
@@ -27,9 +28,11 @@ class EvaluationSerializer(serializers.ModelSerializer):
         ret.pop('created_at')
         ret.pop('updated_at')
         return ret
-    
+    def get_like_count(self, obj):
+        return obj.like.count()
 
 class ReviewSerializer(serializers.ModelSerializer):
+    like_count = serializers.SerializerMethodField()
     class Meta:
         model = models.Review
         fields = '__all__'
@@ -43,3 +46,6 @@ class ReviewSerializer(serializers.ModelSerializer):
         ret.pop('evaluation')
         ret.pop('created_at')
         return ret
+    
+    def get_like_count(self, obj):
+        return obj.like.count()
