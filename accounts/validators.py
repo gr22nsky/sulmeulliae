@@ -21,6 +21,9 @@ def validate_user_data(user_data):
     if birth_year > 2005:
         return "가입불가 미성년자입니다"
 
+    if User.objects.filter(username=username).exists():
+        return "이미 존재하는 username 입니다."
+    
     if User.objects.filter(nickname=nickname).exists():
         return "이미 존재하는 nickname 입니다."
     
