@@ -12,4 +12,8 @@ class User(AbstractUser):
     profile_image = models.ImageField(upload_to='profile_images/', blank=True)
 
     def __str__(self):
-        return self.username
+        return self.username\
+    
+    def soft_delete(self):
+        self.is_active = False
+        self.save()

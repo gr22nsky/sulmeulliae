@@ -36,7 +36,7 @@ class EvaluationListAPIView(APIView):
         return Response(serializer.data)
 
 class EvaluationDetailAPIView(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     def get(self, request, pk):
         evaluation = get_object_or_404(Evaluation, pk=pk)
         evaluation.viewcount += 1
@@ -46,17 +46,18 @@ class EvaluationDetailAPIView(APIView):
         return Response(serializer.data)
     
 class EvaluationLikeAPIView(APIView):
-    
+    permission_classes = [IsAuthenticated]
     def post(self, request, pk):
         evaluation = get_object_or_404(Evaluation, pk=pk)
         user = request.user
-        if evaluation.like.filter(pk=user.pk).exists():
-            evaluation.like.remove(user)
+        if evaluation.likes.filter(pk=user.pk).exists():
+            evaluation.likes.remove(user)
         else:
-            evaluation.like.add(user)
+            evaluation.likes.add(user)
         return Response(status=200)
 
 class UserLikedEvaluationAPIView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         user = request.user
         evaluations = user.like_evaluation.all()
@@ -64,6 +65,7 @@ class UserLikedEvaluationAPIView(APIView):
         return Response(serializer.data)
     
 class ReviewListAPIView(APIView):
+    permission_classes = [IsAuthenticated]
     def get_object(self, pk):
         return get_object_or_404(Evaluation, pk=pk)
     
@@ -95,6 +97,7 @@ class ReviewListAPIView(APIView):
         return Response(serializer.errors, status=400)
     
 class ReviewDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated]
     def get_object(self, pk):
         return get_object_or_404(Review, pk=pk)
     
@@ -111,7 +114,7 @@ class ReviewDetailAPIView(APIView):
         return Response(status=204)
     
 class ReviewLikeAPIView(APIView):
-    
+    permission_classes = [IsAuthenticated]
     def post(self, request, pk):
         review = get_object_or_404(Review, pk=pk)
         user = request.user
@@ -123,6 +126,7 @@ class ReviewLikeAPIView(APIView):
         return Response(status=200)
 
 class UserLikedReviewAPIView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         user = request.user
         reviews = user.like_review.all()
