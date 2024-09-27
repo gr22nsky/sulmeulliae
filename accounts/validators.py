@@ -8,7 +8,6 @@ def check_date_format(input_date):
 	return  bool(re.match(regex, input_date))
 
 def validate_user_data(user_data):
-    
     username = user_data.get("username")
     password = user_data.get("password")
     fullname = user_data.get("fullname")

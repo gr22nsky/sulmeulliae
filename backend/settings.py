@@ -1,6 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
-from. import config
+from .import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -107,7 +107,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     "DEFAULT_PERMISSION_CLASSES":("rest_framework.permissions.IsAuthenticated",),
-
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
 
 }
 SIMPLE_JWT = {
@@ -116,10 +116,6 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME":timedelta(days=1),
     "ROTATE_REFRESH_TOKENS":True,
     "BLACKLIST_AFTER_ROTATION":True,
-}
-
-REST_FRAMEWORK = {
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
 }
 
 # Internationalization
@@ -149,8 +145,3 @@ MEDIA_ROOT = BASE_DIR / "media"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
-}

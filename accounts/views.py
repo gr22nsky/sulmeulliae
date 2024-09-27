@@ -33,24 +33,24 @@ class UserCreateView(APIView):
         response_dict["access"] = str(refresh.access_token),
         response_dict["refresh"] = str(refresh)
         return Response(response_dict)
-
         serializer = UserSerializer(user)
         return Response(serializer.data)
     
     #회원 탈퇴
     def delete(self, request):
-        old_password = request.data.get("old_password")
-        if not request.user.check_password(old_password):
+        password = request.data.get("password")
+        if not request.user.check_password(password):
             return Response(
                 {"message":"기존 비밀번호가 일치하지 않습니다."},
                 status=400)
         request.user.delete()
-        return Response(status=204)
-        
+        return Response(
+            {"message":"성공적으로 탈퇴되었습니다."},
+            status=204)
+    
     #회원 정보 수정       
     def put(self, request):
         user = request.user
-        
         nickname = request.data.get("nickname")
         profile_images = request.data.get("profile_images")
 
@@ -84,7 +84,7 @@ class UserSigninView(APIView):
             {'refresh': str(refresh),
             'access': str(refresh.access_token)})
 
-        
+
 class UserProfileView(APIView):
     def get(self, request, username):
         #유저조회
