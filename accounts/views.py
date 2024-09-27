@@ -30,7 +30,7 @@ class UserCreateView(APIView):
         
         serializer = UserSerializer(user)
         response_dict = serializer.data
-        response_dict["access"] = (str(refresh.access_token),)
+        response_dict["access"] = str(refresh.access_token),
         response_dict["refresh"] = str(refresh)
         return Response(response_dict)
 
