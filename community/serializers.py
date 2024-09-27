@@ -94,3 +94,21 @@ class CommunityDetailSerializer(serializers.ModelSerializer):
     
     def get_like_count(self, obj):
         return obj.like.count() 
+    
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.StringRelatedField()
+    like_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Community
+        fields = (
+            'author',
+            'content',
+            'created_at', 
+            'updated_at',
+            'like_count'
+        )
+
+    def get_like_count(self, obj):
+        return obj.like.count() 
