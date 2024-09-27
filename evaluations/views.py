@@ -68,7 +68,7 @@ class ReviewListAPIView(APIView):
         return get_object_or_404(Evaluation, pk=pk)
     
     def get(self, request, pk):
-        evaluation = self.get_object(pk)
+        evaluation = self.get_object(pk=pk)
         reviews = evaluation.reviews.all()
 
         # 정렬
@@ -87,7 +87,7 @@ class ReviewListAPIView(APIView):
 
     
     def post(self, request, pk):
-        evaluation = self.get_object(pk)
+        evaluation = self.get_object(pk=pk)
         serializer = ReviewSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(evaluation=evaluation, author=request.user)
@@ -99,14 +99,14 @@ class ReviewDetailAPIView(APIView):
         return get_object_or_404(Review, pk=pk)
     
     def put(self, request, pk):
-        review = self.get_object(pk)
+        review = self.get_object(pk=pk)
         serializer = ReviewSerializer(review, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
     
     def delete(self, request, pk):
-        review = self.get_object(pk)
+        review = self.get_object(pk=pk)
         review.delete()
         return Response(status=204)
     
