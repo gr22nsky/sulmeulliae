@@ -10,6 +10,7 @@ class Category(models.Model):
     
 class Community(models.Model):
     title = models.CharField(max_length=100)
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="communitiy_author")
     content = models.TextField()
     view_count = models.PositiveIntegerField(blank=True, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -34,8 +35,8 @@ class Image(models.Model):
 
 
 class Comment(models.Model):
-    community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='communitiy_comment')
-    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="commentor")
+    community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='comment_community')
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="comment_author")
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

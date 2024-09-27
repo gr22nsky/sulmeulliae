@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -24,7 +25,32 @@ class CommunityListAPIView(ListCreateAPIView):
 
     def get(self, request, *args, **kwargs):
             self.permission_classes = [AllowAny]
+            community = self.queryset
+            
+            #검색기능
+            search_query = request.query_params.get('search', None)
+            if search_query:
+                community = community.filter(
+                Q(title__icontains=search_query) |
+                # Q(author__username__icontains=search_query) |
+                Q(content__icontains=search_query)
+            )
+            
+            #정렬기능
+            sort = request.query_params.get('sort', None)
+
+            if sort == 'popular':
+                community = community.order_by('-view_count') 
+            elif sort == 'title':
+                community = community.order_by('title')
+            elif sort == 'like':
+                community = community.order_by('like_count') 
+            else: 
+                community = community.order_by('-created_at')
+
+            self.queryset = community 
             return super().get(request, *args, **kwargs)
+            
 
     def post(self, request, *args, **kwargs):
         self.serializer_class = CommunityCreateSerializer
