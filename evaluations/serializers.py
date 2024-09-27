@@ -29,7 +29,7 @@ class EvaluationSerializer(serializers.ModelSerializer):
         ret.pop('updated_at')
         return ret
     def get_like_count(self, obj):
-        return obj.like.count()
+        return obj.likes.count()
 
 class ReviewSerializer(serializers.ModelSerializer):
     like_count = serializers.SerializerMethodField()
@@ -48,4 +48,4 @@ class ReviewSerializer(serializers.ModelSerializer):
         return ret
     
     def get_like_count(self, obj):
-        return obj.like.count()
+        return obj.likes.count()
