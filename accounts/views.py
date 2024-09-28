@@ -33,8 +33,6 @@ class UserCreateView(APIView):
         response_dict["access"] = str(refresh.access_token),
         response_dict["refresh"] = str(refresh)
         return Response(response_dict)
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
     
     #회원 탈퇴
     def delete(self, request):
@@ -77,7 +75,7 @@ class UserSigninView(APIView):
         user = authenticate(username=username, password=password)
         if not user:
             return Response(
-                {"message":"로그인 정보가 일치하지 않습니다."},
+                {"message":"아이디 또는 비밀번호를 잘못 입력했습니다."},
                 status=400)
         refresh = RefreshToken.for_user(user)
         return Response(
