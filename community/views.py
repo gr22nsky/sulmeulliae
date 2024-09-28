@@ -32,10 +32,12 @@ class CommunityListAPIView(ListCreateAPIView):
             if search_query:
                 community = community.filter(
                 Q(title__icontains=search_query) |
-                # Q(author__username__icontains=search_query) |
+                Q(author__username__icontains=search_query) |
                 Q(content__icontains=search_query)
             )
-            
+            else:
+                Response({'messages':'검색결과가 없습니다.'}, status=200)
+
             #정렬기능
             sort = request.query_params.get('sort', None)
 
@@ -55,6 +57,7 @@ class CommunityListAPIView(ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         self.serializer_class = CommunityCreateSerializer
         images = request.FILES.getlist("images")
+        
         if not images:  
             return Response({"ERROR": "Image file is required."}, status=400)
         return super().post(request, *args, **kwargs)
@@ -75,6 +78,7 @@ class CommunityDetailAPIView(UpdateAPIView):
 
     def get(self, request, pk):
         community= get_object_or_404(Community, pk=pk)
+        print(community.community_image.all())
         user = request.user
         serializer = CommunityDetailSerializer(community)
         return Response(serializer.data, status=200)
@@ -135,8 +139,8 @@ class CommentListPIView(ListCreateAPIView):
     # permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-            self.permission_classes = [AllowAny]
-            return super().get(request, *args, **kwargs)
+        self.permission_classes = [AllowAny]
+        return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.serializer_class = CommentSerializer

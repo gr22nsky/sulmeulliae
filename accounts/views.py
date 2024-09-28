@@ -8,7 +8,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import User
 from .validators import validate_user_data
 from .serializers import UserSerializer
-import requests
+
 
 
 class UserCreateView(APIView):
@@ -39,8 +39,8 @@ class UserCreateView(APIView):
     
     #회원 탈퇴
     def delete(self, request):
-        old_password = request.data.get("old_password")
-        if not request.user.check_password(old_password):
+        password = request.data.get("password")
+        if not request.user.check_password(password):
             return Response(
                 {"message":"기존 비밀번호가 일치하지 않습니다."},
                 status=400)

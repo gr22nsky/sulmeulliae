@@ -58,9 +58,9 @@ class CommunityCreateSerializer(serializers.ModelSerializer):
         write_only_fields = ("content",)
 
     def get_images(self, instance):
-        if instance.images.exists():
+        if instance.communitiy_image.exists():
             return list(
-                instance.images.values_list("image_url", flat=True)
+                instance.communitiy_image.values_list("image_url", flat=True)
             )  # 이미지 URL 반환
         return None 
 
@@ -69,7 +69,7 @@ class CommunityCreateSerializer(serializers.ModelSerializer):
     
 
 class CommunityDetailSerializer(serializers.ModelSerializer):
-    images = ImageSerializer(many=True, read_only=True)
+    community_image = ImageSerializer(many=True, read_only=True)
     author = serializers.StringRelatedField(read_only=True)
     like_count = serializers.SerializerMethodField()
 
@@ -79,7 +79,7 @@ class CommunityDetailSerializer(serializers.ModelSerializer):
             "title",
             "category",
             "content",
-            "images",
+            "community_image",
             "author",
             "view_count",
             "like_count",
