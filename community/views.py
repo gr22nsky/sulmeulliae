@@ -3,7 +3,7 @@ from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView,UpdateAPIView
+from rest_framework.generics import ListCreateAPIView,UpdateAPIView,ListAPIView
 from rest_framework.permissions import (IsAuthenticated, AllowAny,IsAdminUser)
 
 from .paginatuions import CommunityPagination,CommentPagination
@@ -21,7 +21,7 @@ class CommunityListAPIView(ListCreateAPIView):
     queryset = Community.objects.filter(is_deleted=False)
     serializer_class = CommunityListSerializer
     pagination_class = CommunityPagination
-    # permission_classes = [IsAuthenticated]
+    
 
     def get(self, request, *args, **kwargs):
             self.permission_classes = [AllowAny]
@@ -134,6 +134,16 @@ class CommunityLikeAPIView(APIView):
         community.like.add(request.user)
         return Response("좋아요! 했습니다.", status=200)
     
+
+# 유저가 좋아요한 커뮤니티 리스트 조회
+class CommunityLikeListAPIView(ListAPIView):
+    serializer_class = CommunityListSerializer
+    
+    def get_queryset(self):
+        user = self.request.user
+        return Community.objects.filter(like=user)
+
+
 # 댓글 생성 및 리스트 조회
 class CommentListPIView(ListCreateAPIView):
     queryset = Comment.objects.filter(is_deleted=False)
@@ -203,3 +213,12 @@ class CommentLikeAPIView(APIView):
 
         comment.like.add(request.user)
         return Response("좋아요! 했습니다.", status=200)
+
+
+# 유저가 좋아요한 댓글 리스트 조회
+class CommentLikeListAPIView(ListAPIView):
+    serializer_class = CommentSerializer
+    
+    def get_queryset(self):
+        user = self.request.user
+        return Comment.objects.filter(like=user)
