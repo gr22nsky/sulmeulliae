@@ -165,7 +165,7 @@ class CommentEditAPIView(APIView):
     permission_classes = [IsAuthenticated]  
 
     def put(self, request, pk):
-        comment = Comment.objects.filter(pk=pk, is_deleted=False).first()
+        comment = get_object_or_404(Comment, pk=pk, is_deleted=False)
         author = comment.author
         user = request.user
         if user != author:
