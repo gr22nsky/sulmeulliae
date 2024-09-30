@@ -8,12 +8,6 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import User
 from .validators import validate_user_data
 from .serializers import UserSerializer
-<<<<<<< HEAD
-from django.db.models import Q
-=======
-
->>>>>>> 3349946b31c497bf24034c4268045648063f9a57
-
 
 class UserAPIView(APIView):
     def get_permissions(self):
@@ -36,10 +30,6 @@ class UserAPIView(APIView):
         response_dict["refresh"] = str(refresh)
         response_dict["access"] = str(refresh.access_token),
         return Response(response_dict)
-<<<<<<< HEAD
-=======
-    
->>>>>>> feature/accounts
     #회원 탈퇴
     def delete(self, request):
         password = request.data.get("password")
@@ -47,16 +37,8 @@ class UserAPIView(APIView):
             return Response(
                 {"message":"기존 비밀번호가 일치하지 않습니다."},
                 status=400)
-<<<<<<< HEAD
         request.user.soft_delete()
         return Response({"message":"회원탈퇴가 완료되었습니다."}, status=204)
-=======
-        request.user.delete()
-        return Response(
-            {"message":"성공적으로 탈퇴되었습니다."},
-            status=204)
-    
->>>>>>> feature/accounts
     #회원 정보 수정       
     def put(self, request):
         user = request.user
@@ -89,15 +71,9 @@ class UserSigninAPIView(APIView):
         return Response(
             {'refresh': str(refresh),
             'access': str(refresh.access_token)})
-
-<<<<<<< HEAD
         
 class UserProfileAPIView(APIView):
     permission_classes = [AllowAny]
-=======
-
-class UserProfileView(APIView):
->>>>>>> feature/accounts
     def get(self, request, username):
         user = get_object_or_404(User, username=username, is_active=True)
         #User 객체 직렬화(JSON)
