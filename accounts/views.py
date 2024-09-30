@@ -7,7 +7,8 @@ from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import User
 from .validators import validate_user_data
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserProfileSerializer
+from django.utils import timezone
 
 class UserAPIView(APIView):
     def get_permissions(self):
@@ -22,8 +23,9 @@ class UserAPIView(APIView):
                 status=400)
         
         user = User.objects.create_user(**request.data)
-        
         refresh = RefreshToken.for_user(user) #토큰 발급
+        user.last_login = timezone.now()
+        user.save(update_fields=["last_login"])
         
         serializer = UserSerializer(user)
         response_dict = serializer.data
@@ -49,7 +51,7 @@ class UserAPIView(APIView):
         if profile_images:
             user.profile_image = profile_images    
         user.save()
-        serializer = UserSerializer(user)
+        serializer = UserProfileSerializer(user)
         return Response(
             {"message":"회원 정보가 성공적으로 수정되었습니다.",
             "user":serializer.data},
@@ -68,6 +70,8 @@ class UserSigninAPIView(APIView):
                 {"message":"아이디 또는 비밀번호를 잘못 입력했습니다."},
                 status=400)
         refresh = RefreshToken.for_user(user)
+        user.last_login = timezone.now()
+        user.save(update_fields=["last_login"])
         return Response(
             {'refresh': str(refresh),
             'access': str(refresh.access_token)})
@@ -77,7 +81,7 @@ class UserProfileAPIView(APIView):
     def get(self, request, username):
         user = get_object_or_404(User, username=username, is_active=True)
         #User 객체 직렬화(JSON)
-        serializer = UserSerializer(user)
+        serializer = UserProfileSerializer(user)
         return Response(serializer.data)
     
 

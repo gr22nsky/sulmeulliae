@@ -10,9 +10,9 @@ class User(AbstractUser):
     birth = models.DateField(null=True)
     adult_verification = models.BooleanField(default=False)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True)
-
+    
     def __str__(self):
-        return self.username\
+        return self.username
     
     def soft_delete(self):
         self.is_active = False

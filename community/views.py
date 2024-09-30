@@ -86,13 +86,11 @@ class CommunityDetailAPIView(UpdateAPIView):
         return Response(serializer.data, status=200)
 
     def put(self, request, pk):
-            community = Community.objects.filter(pk= pk, is_deleted=False).first()
+            community = get_object_or_404(Community, pk= pk, is_deleted=False)
             author = community.author
             user = request.user
             if user != author:
                 return Response({"error": "이 글을 쓴 본인이 아닙니다."},status=403)
-            if not community:
-                return Response({"error": "이 글을 찾을 수 없습니다."},status=404)
             
             serializer = CommunityDetailSerializer (community, data=request.data, partial=True)
             if serializer.is_valid(raise_exception=True):

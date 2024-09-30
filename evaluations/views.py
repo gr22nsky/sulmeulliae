@@ -52,6 +52,7 @@ class EvaluationLikeAPIView(APIView):
         user = request.user
         if evaluation.likes.filter(pk=user.pk).exists():
             evaluation.likes.remove(user)
+            return Response(status=204)
         else:
             evaluation.likes.add(user)
         return Response(status=200)
@@ -108,6 +109,8 @@ class ReviewDetailAPIView(APIView):
     
     def delete(self, request, pk):
         review = self.get_object(pk=pk)
+        if review.author!= request.user:
+            return Response({"작성자만 리뷰를 삭제할수있습니다."}, status=403)
         review.delete()
         return Response(status=204)
     
@@ -116,10 +119,10 @@ class ReviewLikeAPIView(APIView):
         review = get_object_or_404(Review, pk=pk)
         user = request.user
         
-        if review.like.filter(pk=user.pk).exists():
-            review.like.remove(user)
+        if review.likes.filter(pk=user.pk).exists():
+            review.likes.remove(user)
         else:
-            review.like.add(user)
+            review.likes.add(user)
         return Response(status=200)
 
 class UserLikedReviewAPIView(APIView):

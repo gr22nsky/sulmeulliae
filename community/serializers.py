@@ -58,9 +58,9 @@ class CommunityCreateSerializer(serializers.ModelSerializer):
         write_only_fields = ("content",)
 
     def get_images(self, instance):
-        if instance.communitiy_image.exists():
+        if instance.community_image.exists():
             return list(
-                instance.communitiy_image.values_list("image_url", flat=True)
+                instance.community_image.values_list("image_url", flat=True)
             )  # 이미지 URL 반환
         return None 
 
