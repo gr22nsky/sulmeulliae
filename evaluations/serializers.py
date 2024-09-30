@@ -14,8 +14,19 @@ class EvaluationSerializer(serializers.ModelSerializer):
     like_count = serializers.SerializerMethodField()
     class Meta:
         model = models.Evaluation
-        fields = '__all__'
-        
+        fields = (
+            'title',
+            'category',
+            'content',
+            'size',
+            'origin',
+            'ABV',
+            'ingredient',
+            'avg_rating',
+            'viewcounts',
+            'like_count',
+            'images',
+        )
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         if instance.category:
@@ -23,10 +34,6 @@ class EvaluationSerializer(serializers.ModelSerializer):
         ret['size'] = [size.size for size in instance.size.all()]
         ret['origin'] = [origin.name for origin in instance.origin.all()]
         ret['ingredient'] = [ingredient.name for ingredient in instance.ingredient.all()]
-        ret.pop('id')
-        ret.pop('author')
-        ret.pop('created_at')
-        ret.pop('updated_at')
         return ret
     def get_like_count(self, obj):
         return obj.likes.count()
@@ -35,16 +42,18 @@ class ReviewSerializer(serializers.ModelSerializer):
     like_count = serializers.SerializerMethodField()
     class Meta:
         model = models.Review
-        fields = '__all__'
-        read_only_fields = ('evaluation', 'author')
-
+        fields = (
+            'evaluation',
+            'author',
+            'content',
+            'rating',
+            'like_count',
+            'updated_at',
+        )
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         ret['evaluation'] = instance.evaluation.title
         ret['author'] = instance.author.username
-        ret.pop('id')
-        ret.pop('evaluation')
-        ret.pop('created_at')
         return ret
     
     def get_like_count(self, obj):

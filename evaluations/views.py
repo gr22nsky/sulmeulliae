@@ -1,17 +1,18 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from.models import Evaluation, Review
 from django.db.models import Q
 from.serializers import EvaluationSerializer, ReviewSerializer
 from django.core.paginator import Paginator
 # Create your views here.
 class EvaluationListAPIView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request):
         evaluations = Evaluation.objects.all()
         # 정렬
-        sort = request.GET.get('sort', '')
+        sort = request.GET.get('sort')
         if sort == 'likes':
             evaluations = evaluations.order_by('-likes', '-created_at')
         elif sort == 'viewcounts':
@@ -21,7 +22,7 @@ class EvaluationListAPIView(APIView):
         else:
             evaluations = evaluations.order_by('-created_at')
         # 검색
-        search_query = request.GET.get('search', None)
+        search_query = request.GET.get('search')
         if search_query:
             evaluations = evaluations.filter(
                 Q(title__icontains=search_query) | 
@@ -29,24 +30,23 @@ class EvaluationListAPIView(APIView):
             )
         # 페이지네이션
         page = request.GET.get("page", 1)  # 기본값을 1로 설정
-        paginator = Paginator(evaluations, 1)
+        paginator = Paginator(evaluations, 10)
         evaluations = paginator.page(page)
+        if not evaluations:
+            return Response({"해당하는 평가가 없습니다."}, status=404)
         
         serializer = EvaluationSerializer(evaluations, many=True)
         return Response(serializer.data)
 
 class EvaluationDetailAPIView(APIView):
-    permission_classes = [IsAuthenticated]
     def get(self, request, pk):
         evaluation = get_object_or_404(Evaluation, pk=pk)
-        evaluation.viewcount += 1
-        evaluation.save(update_fields=["viewcount"])
-        images = evaluation.images.all()
+        evaluation.viewcounts += 1
+        evaluation.save(update_fields=["viewcounts"])
         serializer = EvaluationSerializer(evaluation)
         return Response(serializer.data)
     
 class EvaluationLikeAPIView(APIView):
-    permission_classes = [IsAuthenticated]
     def post(self, request, pk):
         evaluation = get_object_or_404(Evaluation, pk=pk)
         user = request.user
@@ -57,7 +57,6 @@ class EvaluationLikeAPIView(APIView):
         return Response(status=200)
 
 class UserLikedEvaluationAPIView(APIView):
-    permission_classes = [IsAuthenticated]
     def get(self, request):
         user = request.user
         evaluations = user.like_evaluation.all()
@@ -65,7 +64,6 @@ class UserLikedEvaluationAPIView(APIView):
         return Response(serializer.data)
     
 class ReviewListAPIView(APIView):
-    permission_classes = [IsAuthenticated]
     def get_object(self, pk):
         return get_object_or_404(Evaluation, pk=pk)
     
@@ -74,7 +72,7 @@ class ReviewListAPIView(APIView):
         reviews = evaluation.reviews.all()
 
         # 정렬
-        sort = request.GET.get('sort', '')
+        sort = request.GET.get('sort')
         if sort == 'likes':
             reviews = reviews.order_by('-likes', '-created_at')
         else:
@@ -83,10 +81,11 @@ class ReviewListAPIView(APIView):
         page = request.GET.get("page", 1)  # 기본값을 1로 설정
         paginator = Paginator(reviews, 10)
         reviews = paginator.page(page)
+        if not reviews:
+            return Response({"해당하는 리뷰가 없습니다."}, status=404)
 
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
-
     
     def post(self, request, pk):
         evaluation = self.get_object(pk=pk)
@@ -97,7 +96,6 @@ class ReviewListAPIView(APIView):
         return Response(serializer.errors, status=400)
     
 class ReviewDetailAPIView(APIView):
-    permission_classes = [IsAuthenticated]
     def get_object(self, pk):
         return get_object_or_404(Review, pk=pk)
     
@@ -114,7 +112,6 @@ class ReviewDetailAPIView(APIView):
         return Response(status=204)
     
 class ReviewLikeAPIView(APIView):
-    permission_classes = [IsAuthenticated]
     def post(self, request, pk):
         review = get_object_or_404(Review, pk=pk)
         user = request.user
@@ -126,7 +123,6 @@ class ReviewLikeAPIView(APIView):
         return Response(status=200)
 
 class UserLikedReviewAPIView(APIView):
-    permission_classes = [IsAuthenticated]
     def get(self, request):
         user = request.user
         reviews = user.like_review.all()
