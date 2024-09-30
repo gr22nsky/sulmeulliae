@@ -8,7 +8,11 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import User
 from .validators import validate_user_data
 from .serializers import UserSerializer
+<<<<<<< HEAD
 from django.db.models import Q
+=======
+
+>>>>>>> 3349946b31c497bf24034c4268045648063f9a57
 
 
 class UserAPIView(APIView):

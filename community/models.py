@@ -10,12 +10,12 @@ class Category(models.Model):
     
 class Community(models.Model):
     title = models.CharField(max_length=100)
-    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="communitiy_author")
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="community_author")
     content = models.TextField()
     view_count = models.PositiveIntegerField(blank=True, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    like = models.ManyToManyField(get_user_model(), related_name='communitiy_like',blank=True)
+    like = models.ManyToManyField(get_user_model(), related_name='community_like',blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     is_deleted = models.BooleanField(default=False)
 
@@ -30,7 +30,7 @@ class Community(models.Model):
 
 
 class Image(models.Model):
-    community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='communitiy_image')
+    community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='community_image')
     image_url = models.ImageField(upload_to="images/")
 
 

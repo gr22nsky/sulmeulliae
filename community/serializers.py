@@ -22,7 +22,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class CommunityListSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField()
-    like_count = serializers.SerializerMethodField()
+    like = serializers.SerializerMethodField()
     
     class Meta:
         model = Community
@@ -31,17 +31,17 @@ class CommunityListSerializer(serializers.ModelSerializer):
             "title",
             "author",
             "view_count",
-            "like_count",
+            "like",
         )
 
-    def get_like_count(self, obj):
+    def get_like(self, obj):
         return obj.like.count()
 
 
 class CommunityCreateSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField(read_only=True)
     author = serializers.StringRelatedField(read_only=True)
-    like_count = serializers.SerializerMethodField()
+    like = serializers.SerializerMethodField()
 
     class Meta:
         model = Community
@@ -53,25 +53,25 @@ class CommunityCreateSerializer(serializers.ModelSerializer):
             "images",
             "author",
             "view_count",
-            "like_count",
+            "like",
         )
         write_only_fields = ("content",)
 
     def get_images(self, instance):
-        if instance.images.exists():
+        if instance.communitiy_image.exists():
             return list(
-                instance.images.values_list("image_url", flat=True)
+                instance.communitiy_image.values_list("image_url", flat=True)
             )  # 이미지 URL 반환
         return None 
 
-    def get_like_count(self, obj):
+    def get_like(self, obj):
         return obj.like.count() 
     
 
 class CommunityDetailSerializer(serializers.ModelSerializer):
-    images = ImageSerializer(many=True, read_only=True)
+    community_image = ImageSerializer(many=True)
     author = serializers.StringRelatedField(read_only=True)
-    like_count = serializers.SerializerMethodField()
+    like = serializers.SerializerMethodField()
 
     class Meta:
         model = Community
@@ -79,10 +79,10 @@ class CommunityDetailSerializer(serializers.ModelSerializer):
             "title",
             "category",
             "content",
-            "images",
+            "community_image",
             "author",
             "view_count",
-            "like_count",
+            "like",
             "created_at",
             "updated_at",
         )
@@ -92,23 +92,23 @@ class CommunityDetailSerializer(serializers.ModelSerializer):
         instance.save(update_fields=["view_count"])
         return super().to_representation(instance)
     
-    def get_like_count(self, obj):
+    def get_like(self, obj):
         return obj.like.count() 
     
 
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField()
-    like_count = serializers.SerializerMethodField()
+    like = serializers.SerializerMethodField()
 
     class Meta:
-        model = Community
+        model = Comment
         fields = (
             'author',
             'content',
             'created_at', 
             'updated_at',
-            'like_count'
+            'like'
         )
 
-    def get_like_count(self, obj):
+    def get_like(self, obj):
         return obj.like.count() 
