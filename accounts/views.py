@@ -36,6 +36,10 @@ class UserAPIView(APIView):
         response_dict["refresh"] = str(refresh)
         response_dict["access"] = str(refresh.access_token),
         return Response(response_dict)
+<<<<<<< HEAD
+=======
+    
+>>>>>>> feature/accounts
     #회원 탈퇴
     def delete(self, request):
         password = request.data.get("password")
@@ -43,8 +47,16 @@ class UserAPIView(APIView):
             return Response(
                 {"message":"기존 비밀번호가 일치하지 않습니다."},
                 status=400)
+<<<<<<< HEAD
         request.user.soft_delete()
         return Response({"message":"회원탈퇴가 완료되었습니다."}, status=204)
+=======
+        request.user.delete()
+        return Response(
+            {"message":"성공적으로 탈퇴되었습니다."},
+            status=204)
+    
+>>>>>>> feature/accounts
     #회원 정보 수정       
     def put(self, request):
         user = request.user
@@ -71,16 +83,21 @@ class UserSigninAPIView(APIView):
         user = authenticate(username=username, password=password)
         if not user:
             return Response(
-                {"message":"로그인 정보가 일치하지 않습니다."},
+                {"message":"아이디 또는 비밀번호를 잘못 입력했습니다."},
                 status=400)
         refresh = RefreshToken.for_user(user)
         return Response(
             {'refresh': str(refresh),
             'access': str(refresh.access_token)})
 
+<<<<<<< HEAD
         
 class UserProfileAPIView(APIView):
     permission_classes = [AllowAny]
+=======
+
+class UserProfileView(APIView):
+>>>>>>> feature/accounts
     def get(self, request, username):
         user = get_object_or_404(User, username=username, is_active=True)
         #User 객체 직렬화(JSON)
