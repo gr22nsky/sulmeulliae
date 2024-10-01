@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView,UpdateAPIView,ListAPIView
 from rest_framework.permissions import (IsAuthenticated, AllowAny,IsAdminUser)
 
-from .paginatuions import CommunityPagination,CommentPagination
+from .paginations import CommunityPagination,CommentPagination
 from .models import Community, Comment, Image, Category
 from .serializers import (
     CommunityListSerializer,
