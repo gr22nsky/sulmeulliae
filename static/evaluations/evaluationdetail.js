@@ -26,7 +26,6 @@ const fetchEvaluationDetail = async () => {
         evaluation.images.forEach(image => {
             imagesHtml += `<img src="http://localhost:8000${image.image}" alt="${image.image}" />`;
         });
-        // 평가 정보 화면에 표시
         evaluationDetail.innerHTML = `
             <h2>${evaluation.title}</h2>
             <p>${evaluation.content}</p>
@@ -36,7 +35,8 @@ const fetchEvaluationDetail = async () => {
             <p>${evaluation.ingredient}</p>
             <p>주종: ${evaluation.category}</p>
             <p>도수: ${evaluation.ABV}%</p>
-            <p>평점: ${evaluation.avg_rating}</p>
+            <p>평점: ${evaluation.avg_rating}점</p>
+            <p>조회수: ${evaluation.viewcounts}</p>
         `;
     } catch (error) {
         console.error('평가를 불러오지 못했습니다.', error);
