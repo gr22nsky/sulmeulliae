@@ -1,6 +1,5 @@
 document.getElementById("signup-form").addEventListener("submit", async function(event) {
     event.preventDefault();
-    
 
     const fullname = document.getElementById("fullname").value;
     const nickname = document.getElementById("nickname").value;
@@ -36,11 +35,9 @@ document.getElementById("signup-form").addEventListener("submit", async function
         });
         if (response.status === 200) {
             alert("회원가입이 완료되었습니다 로그인하세요.");
-            console.log("이동중")
             window.location.href = "/accounts/signin.html";        
         }
     } catch (error) {
-        console.error(error);
         errorMessageElement.textContent = "회원가입에 실패하였습니다. 다시시도하세요.";
     }
 });

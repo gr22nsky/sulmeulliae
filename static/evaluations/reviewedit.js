@@ -1,21 +1,18 @@
 // 기존 리뷰 데이터를 불러와 폼에 채우기
 const fetchReviewDetails = async (reviewId) => {
-    console.log('Fetching review with ID:', reviewId);  // reviewId 로그
     try {
         const response = await axios.get(`http://localhost:8000/api/v1/evaluations/review/${reviewId}/`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('access')}`
             }
         });
-        console.log('Review fetched:', response.data);  // 응답 데이터 로그
         const review = response.data;
         // 폼에 기존 리뷰 내용과 평점 채우기
         document.getElementById("edit-review-content").value = review.content;
         document.getElementById("edit-review-rating").value = review.rating;
 
     } catch (error) {
-        console.error('Error fetching review details:', error);
-        alert('Failed to load review details. Please try again.');
+        alert('리뷰를 불러오지못했습니다. 다시시도해주세요.');
     }
 };
 
@@ -39,12 +36,11 @@ document.getElementById("edit-review-form").addEventListener("submit", async fun
         });
          // 응답 데이터 확인
         if (response.status === 200) {
-            alert('Review updated successfully!');
+            alert('수정이 완료되었습니다!');
             window.location.href = document.referrer;
         }
     } catch (error) {
-        console.error('Error updating review:', error);
-        alert('Failed to update the review. Please try again.');
+        alert('수정실패 다시시도해주세요.');
     }
 });
 

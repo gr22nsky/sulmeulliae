@@ -39,7 +39,6 @@ const fetchEvaluationDetail = async () => {
             <p>조회수: ${evaluation.viewcounts}</p>
         `;
     } catch (error) {
-        console.error('평가를 불러오지 못했습니다.', error);
         // 토큰이 유효하지 않거나 만료된 경우 처리
         if (error.response && error.response.status === 401) {
             alert('로그인후 이용해주세요.');
