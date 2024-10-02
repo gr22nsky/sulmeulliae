@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
-from .settings import DEBUG
+from . import settings
+
 
 urlpatterns = [
     
@@ -11,7 +12,6 @@ urlpatterns = [
     path('api/v1/community/', include('community.urls')),
     
 ]
-
-if DEBUG:
+if settings.DEBUG:
     import debug_toolbar
     urlpatterns += [path('__debug__/', include(debug_toolbar.urls)), ]
