@@ -36,7 +36,8 @@ document.getElementById("signup-form").addEventListener("submit", async function
         });
         if (response.status === 200) {
             alert("회원가입이 완료되었습니다 로그인하세요.");
-            window.location.href = "/static/accounts/signin.html";        
+            console.log("이동중")
+            window.location.href = "/accounts/signin.html";        
         }
     } catch (error) {
         console.error(error);

@@ -20,7 +20,7 @@ document.getElementById("signin-form").addEventListener("submit", async function
             localStorage.setItem('access', response.data.access);
 
             // 성공 시 페이지 이동
-            window.location.href = "/static/evaluations/index.html";
+            window.location.href = "/index.html";
         }
     } catch (error) {
         console.error("로그인 실패:", error);
