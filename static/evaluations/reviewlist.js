@@ -22,8 +22,6 @@ const fetchReviewList = async (evaluationId) => {
             reviewSection.innerHTML = reviewsHtml;
         }
     } catch (error) {
-        console.error('Error fetching reviews:', error);
-
         if (error.response && error.response.status === 401) {
             alert('로그인후 이용해주세요.');
             window.location.href = "/accounts/signin.html";
@@ -42,16 +40,14 @@ const deleteReview = async (reviewId) => {
             });
 
             if (response.status === 204) {
-                alert('Review deleted successfully!');
+                alert('삭제되었습니다!');
                 location.reload();  // 페이지 새로고침으로 리뷰 목록 업데이트
             }
         } catch (error) {
-            console.error('Error deleting review:', error);
-            alert('Failed to delete the review. Please try again.');
+            alert('삭제실패 다시시도해주세요.');
         }
     }
 };
-
 
 // `DOMContentLoaded` 이벤트로 페이지가 완전히 로드된 후 실행
 document.addEventListener('DOMContentLoaded', () => {

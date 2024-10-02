@@ -23,7 +23,6 @@ document.getElementById("review-form").addEventListener("submit", async function
             location.reload();  // 페이지 새로고침으로 리뷰 목록 업데이트
         }
     } catch (error) {
-        console.error('Error submitting review:', error);
-        alert('Failed to submit the review. Please try again.');
+        alert('리뷰작성실패 다시시도해주세요.');
     }
 });
