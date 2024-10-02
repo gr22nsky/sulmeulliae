@@ -9,11 +9,26 @@
     <h1>Evaluation Detail</h1>
     <div id="evaluation-detail">
     </div>
+    <hr/>
     <h3>Reviews</h3>
     <div id="review-list">
+    </div>
+    <div>
+        <hr/>
+        <h3>리뷰작성</h3>
+        <form id="review-form">
+        <label for="review-content"></label><br>
+        <textarea id="review-content" name="content" rows="4" cols="50"></textarea><br><br>
+        
+        <label for="review-rating">평점(1-5):</label><br>
+        <input type="number" id="review-rating" name="rating" min="1" max="5"><br><br>
+
+        <button type="submit">작성</button>
+        </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/evaluations/evaluationdetail.js"></script>
     <script src="/evaluations/reviewlist.js"></script>
+    <script src="/evaluations/reviewform.js"></script>
 </body>
 </html>

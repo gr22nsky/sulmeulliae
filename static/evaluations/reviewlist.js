@@ -11,6 +11,8 @@ const fetchReviewList = async (evaluationId) => {
             reviewsHtml += `
                 <div class="review">
                     <p>${review.author} | ${review.content} | ${review.rating} 점</p>
+                    <button onclick="window.location.href='/evaluations/reviewedit.html?reviewId=${review.id}'">수정</button>
+                    <button onclick="deleteReview(${review.id})">삭제</button>
                 </div>
             `;
         });
@@ -28,6 +30,28 @@ const fetchReviewList = async (evaluationId) => {
         }
     }
 };
+
+const deleteReview = async (reviewId) => {
+    const confirmDelete = confirm("Are you sure you want to delete this review?");
+    if (confirmDelete) {
+        try {
+            const response = await axios.delete(`http://localhost:8000/api/v1/evaluations/review/${reviewId}/`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('access')}`,
+                }
+            });
+
+            if (response.status === 204) {
+                alert('Review deleted successfully!');
+                location.reload();  // 페이지 새로고침으로 리뷰 목록 업데이트
+            }
+        } catch (error) {
+            console.error('Error deleting review:', error);
+            alert('Failed to delete the review. Please try again.');
+        }
+    }
+};
+
 
 // `DOMContentLoaded` 이벤트로 페이지가 완전히 로드된 후 실행
 document.addEventListener('DOMContentLoaded', () => {

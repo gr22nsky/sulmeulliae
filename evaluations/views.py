@@ -107,6 +107,11 @@ class ReviewDetailAPIView(APIView):
     def get_object(self, pk):
         return get_object_or_404(Review, pk=pk)
 
+    def get(self, request, pk):
+        review = self.get_object(pk=pk)
+        serializer = ReviewSerializer(review)
+        return Response(serializer.data)
+
     def put(self, request, pk):
         review = self.get_object(pk=pk)
         serializer = ReviewSerializer(review, data=request.data, partial=True)
