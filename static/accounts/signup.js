@@ -1,5 +1,6 @@
 document.getElementById("signup-form").addEventListener("submit", async function(event) {
     event.preventDefault();
+    
 
     const fullname = document.getElementById("fullname").value;
     const nickname = document.getElementById("nickname").value;
@@ -12,14 +13,14 @@ document.getElementById("signup-form").addEventListener("submit", async function
 
     // 비밀번호 확인
     if (password !== confirmPassword) {
-        errorMessageElement.textContent = "Passwords do not match!";
+        errorMessageElement.textContent = "비밀번호가 일치하지 않습니다.";
         return;
     }
 
     // 생년월일 형식 확인 (YYYY-MM-DD)
     const birthRegex = /^\d{4}-\d{2}-\d{2}$/;
     if (!birthRegex.test(birth)) {
-        errorMessageElement.textContent = "Birth date must be in the format YYYY-MM-DD";
+        errorMessageElement.textContent = "생년월일 형식이 맞지 않습니다.";
         return;
     }
 
@@ -33,13 +34,13 @@ document.getElementById("signup-form").addEventListener("submit", async function
             email,
             password
         });
-
         if (response.status === 200) {
-            alert("Sign up successful! Please log in.");
-            window.location.href = "/static/accounts/signin.html";
+            alert("회원가입이 완료되었습니다 로그인하세요.");
+            console.log("이동중")
+            window.location.href = "/accounts/signin.html";        
         }
     } catch (error) {
         console.error(error);
-        errorMessageElement.textContent = "Failed to sign up. Please try again.";
+        errorMessageElement.textContent = "회원가입에 실패하였습니다. 다시시도하세요.";
     }
 });

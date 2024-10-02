@@ -26,7 +26,7 @@ const fetchUserInfo = async () => {
 
             document.getElementById("signout-btn").addEventListener("click", () => {
                 localStorage.removeItem('access');  // 로컬 스토리지에서 토큰 삭제
-                window.location.href = '/static/evaluations/index.html';  // 로그인 페이지로 이동
+                window.location.href = '/index.html';  // 로그인 페이지로 이동
             });
         }
     } catch (error) {
@@ -48,12 +48,12 @@ const fetchEvaluations = async () => {
             const evaluationItem = document.createElement('div');
             evaluationItem.className = 'evaluation-item';
             evaluationItem.innerHTML = `
-                <h4>${evaluation.title}</h4>
+                <a href='/evaluations/evaluationdetail.html?id=${evaluation.id}'>${evaluation.title}</a>
             `;
             evaluationList.appendChild(evaluationItem);
         });
     } catch (error) {
-        console.error('Error fetching evaluations:', error);
+        console.error('평가목록을 가져올 수 없습니다.', error);
     }
 };
 
