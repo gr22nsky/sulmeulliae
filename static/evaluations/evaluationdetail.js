@@ -22,12 +22,15 @@ const fetchEvaluationDetail = async () => {
         });
 
         const evaluation = response.data;
-
+        let imagesHtml = '';
+        evaluation.images.forEach(image => {
+            imagesHtml += `<img src="http://localhost:8000${image.image}" alt="${image.image}" />`;
+        });
         // 평가 정보 화면에 표시
         evaluationDetail.innerHTML = `
             <h2>${evaluation.title}</h2>
-            <p>${evaluation.images}</p>
             <p>${evaluation.content}</p>
+            <div class="evaluation-images">${imagesHtml}</div>
             <p>${evaluation.origin}</p>
             <p>${evaluation.size}</p>
             <p>${evaluation.ingredient}</p>
