@@ -53,7 +53,7 @@ const fetchEvaluations = async () => {
             evaluationList.appendChild(evaluationItem);
         });
     } catch (error) {
-        console.error('Error fetching evaluations:', error);
+        console.error('평가목록을 가져올 수 없습니다.', error);
     }
 };
 
