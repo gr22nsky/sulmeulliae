@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Review</title>
+</head>
+<body>
+    <h1>리뷰 수정</h1>
+
+    <!-- 리뷰 수정 폼 -->
+    <form id="edit-review-form">
+        <label for="edit-review-content">내용:</label><br>
+        <textarea id="edit-review-content" name="content" rows="4" cols="50"></textarea><br><br>
+
+        <label for="edit-review-rating">평점(1-5):</label><br>
+        <input type="number" id="edit-review-rating" name="rating" min="1" max="5"><br><br>
+
+        <button type="submit">수정</button>
+    </form>
+
+    <!-- Axios 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- 리뷰 수정 스크립트 -->
+    <script src="/evaluations/reviewedit.js"></script>
+</body>
+</html>

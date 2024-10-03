@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sulmeulliae</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Sulmeulliae</h1>
+
+        <div id="auth-buttons">
+            <button onclick="location.href='/accounts/signin.html'">Sign In</button>
+            <button onclick="location.href='/accounts/signup.html'">Sign Up</button>
+        </div>
+    </header>
+    <h2>주류평가목록</h2>
+    <div id="evaluation-list">
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/evaluations/index.js"></script>
+</body>
+</html>
