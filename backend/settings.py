@@ -27,7 +27,6 @@ SECRET_KEY = env('SECRET_KEY')
 
 ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', '43.201.83.17']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -179,5 +178,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
-    'http://43.201.83.17',
+    'https://d6ug251fymee6.cloudfront.net',
 ]

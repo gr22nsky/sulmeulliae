@@ -25,7 +25,7 @@ document.getElementById("signup-form").addEventListener("submit", async function
 
     try {
         // 백엔드로 회원가입 요청
-        const response = await axios.post('http://localhost:8000/api/v1/accounts/', {
+        const response = await axios.post('http://43.201.83.17/api/v1/accounts/', {
             fullname,
             nickname,
             birth,
