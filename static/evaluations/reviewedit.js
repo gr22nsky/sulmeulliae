@@ -1,7 +1,7 @@
 // 기존 리뷰 데이터를 불러와 폼에 채우기
 const fetchReviewDetails = async (reviewId) => {
     try {
-        const response = await axios.get(`http://localhost:8000/api/v1/evaluations/review/${reviewId}/`, {
+        const response = await axios.get(`http://43.201.83.17/api/v1/evaluations/review/${reviewId}/`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('access')}`
             }
@@ -25,7 +25,7 @@ document.getElementById("edit-review-form").addEventListener("submit", async fun
     const newRating = document.getElementById("edit-review-rating").value;
 
     try {
-        const response = await axios.put(`http://localhost:8000/api/v1/evaluations/review/${reviewId}/`, {
+        const response = await axios.put(`http://43.201.83.17/api/v1/evaluations/review/${reviewId}/`, {
             content: newContent,
             rating: newRating
         }, {
