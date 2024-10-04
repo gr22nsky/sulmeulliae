@@ -176,7 +176,8 @@ MEDIA_ROOT = env("MEDIA_ROOT", default=BASE_DIR / "media")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
+    'https://localhost:3000',
+    'https://127.0.0.1:3000',
     'https://d6ug251fymee6.cloudfront.net',
+    'https://sulmeulliae.com'
 ]

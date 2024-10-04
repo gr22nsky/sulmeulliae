@@ -25,7 +25,7 @@ document.getElementById("signup-form").addEventListener("submit", async function
 
     try {
         // 백엔드로 회원가입 요청
-        const response = await axios.post('http://43.201.83.17/api/v1/accounts/', {
+        const response = await axios.post('https://43.201.83.17/api/v1/accounts/', {
             fullname,
             nickname,
             birth,
@@ -35,7 +35,7 @@ document.getElementById("signup-form").addEventListener("submit", async function
         });
         if (response.status === 200) {
             alert("회원가입이 완료되었습니다 로그인하세요.");
-            window.location.href = "/accounts/signin.html";        
+            window.location.href = "/signin.html";
         }
     } catch (error) {
         errorMessageElement.textContent = "회원가입에 실패하였습니다. 다시시도하세요.";

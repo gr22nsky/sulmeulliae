@@ -1,6 +1,6 @@
 const fetchReviewList = async (evaluationId) => {
     try {
-        const response = await axios.get(`http://43.201.83.17/api/v1/evaluations/${evaluationId}/review/`, {
+        const response = await axios.get(`https://43.201.83.17/api/v1/evaluations/${evaluationId}/review/`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('access')}`,  // 토큰 가져오기
             },
@@ -33,7 +33,7 @@ const deleteReview = async (reviewId) => {
     const confirmDelete = confirm("Are you sure you want to delete this review?");
     if (confirmDelete) {
         try {
-            const response = await axios.delete(`http://43.201.83.17/api/v1/evaluations/review/${reviewId}/`, {
+            const response = await axios.delete(`https://43.201.83.17/api/v1/evaluations/review/${reviewId}/`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('access')}`,
                 }
