@@ -1,6 +1,6 @@
 // API 엔드포인트 URL 설정
-const API_URL = 'https://43.201.83.17/api/v1/evaluations/';
-const USER_INFO_URL = 'https://43.201.83.17/api/v1/accounts/info/';  // 사용자 정보 가져오는 API URL
+const API_URL = 'https://sulmeulliae.com/api/v1/evaluations/';
+const USER_INFO_URL = 'https://sulmeulliae.com/api/v1/accounts/info/';  // 사용자 정보 가져오는 API URL
 
 // 데이터 목록을 표시할 HTML 요소
 const evaluationList = document.getElementById('evaluation-list');

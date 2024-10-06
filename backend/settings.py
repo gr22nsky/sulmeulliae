@@ -25,7 +25,8 @@ print(DEBUG)
 # exception if SECRET_KEY not in os.environ
 SECRET_KEY = env('SECRET_KEY')
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', '43.201.83.17']
+# ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', '43.201.83.17']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -175,9 +176,10 @@ MEDIA_ROOT = env("MEDIA_ROOT", default=BASE_DIR / "media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CORS_ALLOWED_ORIGINS = [
-    'https://localhost:3000',
-    'https://127.0.0.1:3000',
-    'https://d6ug251fymee6.cloudfront.net',
-    'https://sulmeulliae.com'
-]
+# CORS_ALLOWED_ORIGINS = [
+#     'https://localhost:3000',
+#     'https://127.0.0.1:3000',
+#     'https://d6ug251fymee6.cloudfront.net',
+#     'https://sulmeulliae.com'
+# ]
+CORS_ALLOWED_ORIGINS = True
