@@ -182,4 +182,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 #     'https://d6ug251fymee6.cloudfront.net',
 #     'https://sulmeulliae.com'
 # ]
-CORS_ALLOWED_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True
