@@ -25,7 +25,8 @@ print(DEBUG)
 # exception if SECRET_KEY not in os.environ
 SECRET_KEY = env('SECRET_KEY')
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', '43.201.83.17', 'sulmeulliae.com', 'api.sulmeulliae.com']
+# ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', '43.201.83.17']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -185,6 +186,6 @@ CORS_ALLOWED_ORIGINS = [
 # CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_HEADERS = [
-"content-type",
-"authorization",
+    "content-type",
+    "authorization",
 ]
