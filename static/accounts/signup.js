@@ -25,7 +25,7 @@ document.getElementById("signup-form").addEventListener("submit", async function
 
     try {
         // 백엔드로 회원가입 요청
-        const response = await axios.post('https://sulmeulliae.com/api/v1/accounts/', {
+        const response = await axios.post('https://api.sulmeulliae.com/api/v1/accounts/', {
             fullname,
             nickname,
             birth,

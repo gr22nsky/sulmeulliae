@@ -1,6 +1,6 @@
 const fetchReviewList = async (evaluationId) => {
     try {
-        const response = await axios.get(`https://sulmeulliae.com/api/v1/evaluations/${evaluationId}/review/`, {
+        const response = await axios.get(`https://api.sulmeulliae.com/api/v1/evaluations/${evaluationId}/review/`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('access')}`,  // 토큰 가져오기
             },
@@ -33,7 +33,7 @@ const deleteReview = async (reviewId) => {
     const confirmDelete = confirm("Are you sure you want to delete this review?");
     if (confirmDelete) {
         try {
-            const response = await axios.delete(`https://sulmeulliae.com/api/v1/evaluations/review/${reviewId}/`, {
+            const response = await axios.delete(`https://api.sulmeulliae.com/api/v1/evaluations/review/${reviewId}/`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('access')}`,
                 }
