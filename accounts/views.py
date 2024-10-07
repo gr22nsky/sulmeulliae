@@ -86,7 +86,6 @@ class UserSigninAPIView(APIView):
 
 
 class UserProfileAPIView(APIView):
-    permission_classes = [AllowAny]
 
     def get(self, request, username):
         user = get_object_or_404(User, username=username, is_active=True)
@@ -94,6 +93,27 @@ class UserProfileAPIView(APIView):
         serializer = UserProfileSerializer(user)
         return Response(serializer.data)
 
+    def post(self, request, username):
+        user = get_object_or_404(User, username=username, is_active=True)
+        if request.user == user:
+            return Response(
+                {"message":"자신을 팔로우 할 수 없습니다."}, status=400
+            )
+        if not request.user.followings.filter(id=user.id).exists():
+            request.user.followings.add(user)
+            return Response(
+                {"message":"팔로우 하였습니다."}, status=200
+            )
+        else:
+            request.user.followings.remove(user)
+            return Response(
+                {"message":"언팔로우 하였습니다."}, status=200
+            )
+    
+    
+    
+    
+    
 class UserInfoView(APIView):
     def get(self, request):
         user = request.user
