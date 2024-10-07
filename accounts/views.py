@@ -82,7 +82,7 @@ class UserSigninAPIView(APIView):
         refresh = RefreshToken.for_user(user)
         user.last_login = timezone.now()
         user.save(update_fields=["last_login"])
-        return Response({"refresh": str(refresh), "access": str(refresh.access_token)})
+        return Response({"refresh": str(refresh), "access": str(refresh.access_token), "user_id":user.id})
 
 
 class UserProfileAPIView(APIView):
