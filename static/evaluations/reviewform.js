@@ -7,7 +7,7 @@ document.getElementById("review-form").addEventListener("submit", async function
     const access = localStorage.getItem('access');  // 저장된 JWT 토큰 가져오기
 
     try {
-        const response = await axios.post(`https://sulmeulliae.com/api/v1/evaluations/${evaluationId}/review/`, {
+        const response = await axios.post(`https://api.sulmeulliae.com/api/v1/evaluations/${evaluationId}/review/`, {
             content: content,
             rating: rating
         }, {

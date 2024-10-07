@@ -3,7 +3,7 @@ const params = new URLSearchParams(window.location.search);
 const evaluationId = params.get('id');
 
 // API 엔드포인트 설정
-const EVALUATION_DETAIL_URL = `https://sulmeulliae.com/api/v1/evaluations/${evaluationId}/`;
+const EVALUATION_DETAIL_URL = `https://api.api.sulmeulliae.com/api/v1/evaluations/${evaluationId}/`;
 
 // 평가 상세 정보를 표시할 요소
 const evaluationDetail = document.getElementById('evaluation-detail');
@@ -24,7 +24,7 @@ const fetchEvaluationDetail = async () => {
         const evaluation = response.data;
         let imagesHtml = '';
         evaluation.images.forEach(image => {
-            imagesHtml += `<img src="https://sulmeulliae.com${image.image}" alt="${image.image}" />`;
+            imagesHtml += `<img src="https://api.sulmeulliae.com${image.image}" alt="${image.image}" />`;
         });
         evaluationDetail.innerHTML = `
             <h2>${evaluation.title}</h2>
