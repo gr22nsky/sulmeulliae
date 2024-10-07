@@ -191,5 +191,3 @@ CORS_ALLOW_HEADERS = [
     "content-type",
     "authorization",
 ]
-
-USE_X_FORWARDED_HOST = True
