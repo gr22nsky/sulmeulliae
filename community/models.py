@@ -18,7 +18,7 @@ class Community(models.Model):
     view_count = models.PositiveIntegerField(blank=True, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    like = models.ManyToManyField(
+    likes = models.ManyToManyField(
         get_user_model(), related_name="community_like", blank=True
     )
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -50,7 +50,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
-    like = models.ManyToManyField(
+    likes = models.ManyToManyField(
         get_user_model(), related_name="comment_like", blank=True
     )
 
