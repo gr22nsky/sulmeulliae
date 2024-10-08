@@ -158,34 +158,34 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 
-# STATIC_URL = env("STATIC_URL", default="/static/")
-# STATICFILES_DIRS = [BASE_DIR / "static"]
-# STATIC_ROOT = env("STATIC_ROOT", default=BASE_DIR / "staticfiles")
+STATIC_URL = env("STATIC_URL", default="/static/")
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = env("STATIC_ROOT", default=BASE_DIR / "staticfiles")
 
 # # Media files
-# MEDIA_URL = env("MEDIA_URL", default="/media/")
-# MEDIA_ROOT = env("MEDIA_ROOT", default=BASE_DIR / "media")
+MEDIA_URL = env("MEDIA_URL", default="/media/")
+MEDIA_ROOT = env("MEDIA_ROOT", default=BASE_DIR / "media")
 
-STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"
+# STATIC_URL = "/static/"
+# STATICFILES_DIRS = [BASE_DIR / "static"]
+# STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Media files
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+# MEDIA_URL = "/media/"
+# MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CORS_ALLOWED_ORIGINS = [
-    'https://localhost:3000',
-    'https://127.0.0.1:3000',
-    'https://api.sulmeulliae.com',
-    'https://sulmeulliae.com'
-]
-# CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = [
+#     'https://localhost:3000',
+#     'https://127.0.0.1:3000',
+#     'https://api.sulmeulliae.com',
+#     'https://sulmeulliae.com'
+# ]
+CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOW_HEADERS = [
     "content-type",
