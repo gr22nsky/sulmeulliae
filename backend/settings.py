@@ -165,7 +165,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),  # 이 경로가 존재해야 합니다
+    os.path.join(BASE_DIR, 'static'),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
@@ -193,3 +193,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 # ]
 
 OPENAI_API_KEY = env('OPENAI_API_KEY')
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://api.sulmeulliae.com',
+    'https://sulmeulliae.com',
+]
