@@ -9,6 +9,7 @@ class ImageSerializer(serializers.ModelSerializer):
         model = models.EvaluationImage
         fields = ("image",)
 
+
 class EvaluationSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, read_only=True)
     like_count = serializers.SerializerMethodField()
