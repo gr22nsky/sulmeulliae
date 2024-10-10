@@ -13,7 +13,7 @@ urlpatterns = [
         views.CommunityLikeListAPIView.as_view(),
         name="community_like_list",
     ),
-    path("<int:pk>/comment/", views.CommentListPIView.as_view(), name="comment_list"),
+    path("<int:pk>/comment/", views.CommentListAPIView.as_view(), name="comment_list"),
     path(
         "comment/<int:pk>/", views.CommentEditAPIView.as_view(), name="comment_detail"
     ),
