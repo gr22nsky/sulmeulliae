@@ -12,7 +12,7 @@ from .models import User
 from .validators import validate_user_data
 from .serializers import UserSerializer, UserProfileSerializer
 from django.utils import timezone
-
+from datetime import timedelta
 
 class UserAPIView(APIView):
     def get_permissions(self):
@@ -80,6 +80,11 @@ class UserSigninAPIView(APIView):
                 {"message": "아이디 또는 비밀번호를 잘못 입력했습니다."}, status=400
             )
         refresh = RefreshToken.for_user(user)
+        if user is not None:
+            # 마지막 로그인 시간이 24시간 이상 차이가 나면 포인트 지급
+            if user.last_login is None or (timezone.now() - user.last_login) > timedelta(hours=24):
+                user.points += 3  # 3포인트 추가
+                user.save()
         user.last_login = timezone.now()
         user.save(update_fields=["last_login"])
         return Response({"refresh": str(refresh), "access": str(refresh.access_token), "user_id":user.id})
