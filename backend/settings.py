@@ -194,6 +194,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 OPENAI_API_KEY = env('OPENAI_API_KEY')
 
+
 CSRF_TRUSTED_ORIGINS = [
     'https://api.sulmeulliae.com',
     'https://sulmeulliae.com',
