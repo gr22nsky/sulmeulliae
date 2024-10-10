@@ -20,7 +20,7 @@ from .serializers import (
 class CommunityListAPIView(ListCreateAPIView):
     queryset = Community.objects.filter(is_deleted=False)
     serializer_class = CommunityListSerializer
-    pagination_class = CommunityPagination
+    # pagination_class = CommunityPagination
 
     def get(self, request, *args, **kwargs):
         self.permission_classes = [AllowAny]
@@ -56,8 +56,8 @@ class CommunityListAPIView(ListCreateAPIView):
         self.serializer_class = CommunityCreateSerializer
         images = request.FILES.getlist("images")
 
-        if not images:
-            return Response({"ERROR": "Image file is required."}, status=400)
+        # if not images:
+        #     return Response({"ERROR": "Image file is required."}, status=400)
         return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):
@@ -71,7 +71,7 @@ class CommunityListAPIView(ListCreateAPIView):
 class CommunityDetailAPIView(UpdateAPIView):
     queryset = Community.objects.filter(is_deleted=False)
     serializer_class = CommunityDetailSerializer
-    pagination_class = CommunityPagination
+    # pagination_class = CommunityPagination
 
     def get_permissions(self):
         if self.request.method == "GET":
@@ -125,12 +125,12 @@ class CommunityLikeAPIView(APIView):
     def post(self, request, pk):
         community = get_object_or_404(Community, pk=pk, is_deleted=False)
 
-        if request.user in community.like.all():
-            community.like.remove(request.user)
-            return Response("좋아요! 취소했습니다.", status=200)
+        if request.user in community.likes.all():
+            community.likes.remove(request.user)
+            return Response(status=204)
 
-        community.like.add(request.user)
-        return Response("좋아요! 했습니다.", status=200)
+        community.likes.add(request.user)
+        return Response(status=200)
 
 
 # 유저가 좋아요한 커뮤니티 리스트 조회
@@ -139,26 +139,28 @@ class CommunityLikeListAPIView(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Community.objects.filter(like=user)
+        return Community.objects.filter(likes=user)
 
 
 # 댓글 생성 및 리스트 조회
-class CommentListPIView(ListCreateAPIView):
+class CommentListAPIView(ListCreateAPIView):
     queryset = Comment.objects.filter(is_deleted=False)
     serializer_class = CommentSerializer
     pagination_class = CommentPagination
 
-    def get(self, request, *args, **kwargs):
-        comment = self.queryset
-
+    def get(self, request, pk):
+        community = Community.objects.get(pk=pk, is_deleted=False)
+        comments = community.comment_community.filter(is_deleted=False)
+        # comment = self.queryset
+        serializer = CommentSerializer(comments, many=True)
         # 정렬기능
-        sort = request.query_params.get("sort", None)
-        if sort == "like":
-            comment = comment.order_by("like")
-        else:
-            comment = comment.order_by("-created_at")
-        self.queryset = comment
-        return super().get(request, *args, **kwargs)
+        # sort = request.query_params.get("sort", None)
+        # if sort == "like":
+        #     comment = comment.order_by("like")
+        # else:
+        #     comment = comment.order_by("-created_at")
+        # self.queryset = comment
+        return Response(serializer.data, status=200)
 
     def post(self, request, pk):
         community = Community.objects.get(pk=pk)
@@ -171,7 +173,11 @@ class CommentListPIView(ListCreateAPIView):
 # 댓글 수정 및 삭제
 class CommentEditAPIView(APIView):
     permission_classes = [IsAuthenticated]
-
+    def get(self, request, pk):
+        comment = get_object_or_404(Comment, pk=pk, is_deleted=False)
+        serializer = CommentSerializer(comment)
+        return Response(serializer.data, status=200)
+    
     def put(self, request, pk):
         comment = get_object_or_404(Comment, pk=pk, is_deleted=False)
         author = comment.author
@@ -205,12 +211,12 @@ class CommentLikeAPIView(APIView):
     def post(self, request, pk):
         comment = get_object_or_404(Comment, pk=pk, is_deleted=False)
 
-        if request.user in comment.like.all():
-            comment.like.remove(request.user)
-            return Response("좋아요! 취소했습니다.", status=200)
+        if request.user in comment.likes.all():
+            comment.likes.remove(request.user)
+            return Response(status=204)
 
-        comment.like.add(request.user)
-        return Response("좋아요! 했습니다.", status=200)
+        comment.likes.add(request.user)
+        return Response(status=200)
 
 
 # 유저가 좋아요한 댓글 리스트 조회
@@ -219,4 +225,4 @@ class CommentLikeListAPIView(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Comment.objects.filter(like=user)
+        return Comment.objects.filter(likes=user)
