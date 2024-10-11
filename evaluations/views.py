@@ -2,10 +2,12 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from .models import Evaluation, Review
+from .models import Evaluation, Review, ReviewSummary
 from django.db.models import Q
 from .serializers import EvaluationSerializer, ReviewSerializer
 from django.core.paginator import Paginator
+from django.conf import settings
+import requests
 
 
 # Create your views here.
@@ -125,6 +127,49 @@ class ReviewDetailAPIView(APIView):
             return Response({"작성자만 리뷰를 삭제할수있습니다."}, status=403)
         review.delete()
         return Response(status=204)
+
+
+class ReviewSummaryAPIView(APIView):
+
+    def post(self, request, pk):
+        reviews = []
+        evaluation = get_object_or_404(Evaluation, pk=pk)
+
+        # 평가에 연결된 모든 리뷰를 내용 추가
+        for review in evaluation.reviews.all():
+            reviews.append(review.content)
+
+        summary = self.summarize_reviews(reviews)
+
+        # 요약해준 리뷰 내용 DB에 저장
+        ReviewSummary.objects.create(evaluation=evaluation, summary=summary)
+        return Response({"summary": summary}, status=200)
+
+    def summarize_reviews(self, reviews):
+        api_key = settings.OPENAI_API_KEY
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        }
+
+        data = {
+            "model": "gpt-4-turbo",
+            "messages": [
+                {
+                    "role": "user",
+                    "content": """Summarize the overall description of the following reviews. 
+                    Summarize in 3 to 4 sentences in a polite and concise manner, 
+                    using natural sentence flow,and answer in Korean.: """
+                    + " ".join(reviews),
+                }
+            ],
+            "max_tokens": 200,
+        }
+
+        response = requests.post(
+            "https://api.openai.com/v1/chat/completions", headers=headers, json=data
+        )
+        return response.json()["choices"][0]["message"]["content"]
 
 
 class ReviewLikeAPIView(APIView):
