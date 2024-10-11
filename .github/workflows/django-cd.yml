@@ -16,8 +16,9 @@ jobs:
           key: ${{ secrets.KEY }}
           port: 22
           script: |
-            cd /home/ubuntu/distribution_gallery
-            git pull origin main
+            cd /home/ubuntu/sulmeulliae
+            git pull origin dev
             sudo docker-compose up -d --build
+            sudo python3 manage.py migrate
             sudo systemctl restart nginx
             sudo systemctl restart gunicorn
