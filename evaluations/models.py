@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 from django.db.models import Avg
+from django.db.models import FloatField
+from django.db.models.functions import Cast
+
 
 
 # Create your models here.
@@ -86,26 +89,20 @@ class Review(models.Model):
         ("1", "★"),
         ("0", "☆"),
     ]
-    evaluation = models.ForeignKey(
-        Evaluation, on_delete=models.CASCADE, related_name="reviews"
-    )
-    author = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reviews"
-    )
+    evaluation = models.ForeignKey(Evaluation, on_delete=models.CASCADE, related_name="reviews")
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reviews")
     content = models.TextField()
     rating = models.CharField(max_length=1, choices=ratings)
-    likes = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, blank=True, related_name="like_review"
-    )
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="like_review")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        average = self.evaluation.reviews.aggregate(Avg("rating"))["rating__avg"]
-        self.evaluation.avg_rating = (
-            round(float(average), 2) if average is not None else 0
-        )
+        average = self.evaluation.reviews.aggregate(
+            avg_rating=Avg(Cast('rating', output_field=models.FloatField()))
+        )["avg_rating"]
+        self.evaluation.avg_rating = round(float(average), 2) if average is not None else 0
         self.evaluation.save()
 
     def __str__(self):

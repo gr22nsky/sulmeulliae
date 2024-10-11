@@ -23,7 +23,9 @@ DEBUG = env('DEBUG')
 print(DEBUG)
 # Raises Django's ImproperlyConfigured
 # exception if SECRET_KEY not in os.environ
+
 SECRET_KEY = env('SECRET_KEY')
+OPENAI_API_KEY = env('OPENAI_API_KEY')
 
 # ALLOWED_HOSTS = ['api.sulmeulliae.com', '43.201.83.17', 'sulmeulliae.com', '127.0.0.1']
 
@@ -45,13 +47,15 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "django_extensions",
-    'debug_toolbar',
-    'corsheaders',
+    "debug_toolbar",
+    "corsheaders",
     # local apps
     "accounts",
     "evaluations",
     "community",
     "chatbot",
+    "chatgpt",
+    
 ]
 
 MIDDLEWARE = [
@@ -191,8 +195,6 @@ CORS_ALLOW_ALL_ORIGINS = False
 #     "content-type",
 #     "authorization",
 # ]
-
-OPENAI_API_KEY = env('OPENAI_API_KEY')
 
 
 CSRF_TRUSTED_ORIGINS = [
