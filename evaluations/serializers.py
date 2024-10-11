@@ -9,6 +9,7 @@ class ImageSerializer(serializers.ModelSerializer):
         model = models.EvaluationImage
         fields = ("image",)
 
+
 class EvaluationSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, read_only=True)
     like_count = serializers.SerializerMethodField()
@@ -27,8 +28,10 @@ class EvaluationSerializer(serializers.ModelSerializer):
             "avg_rating",
             "viewcounts",
             "like_count",
+            "likes",
             "images",
         )
+
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
@@ -40,7 +43,7 @@ class EvaluationSerializer(serializers.ModelSerializer):
             ingredient.name for ingredient in instance.ingredient.all()
         ]
         return ret
-
+    
     def get_like_count(self, obj):
         return obj.likes.count()
 
@@ -57,6 +60,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             "content",
             "rating",
             "like_count",
+            "likes",
             "updated_at",
         )
         read_only_fields = ("evaluation", "author")
@@ -69,3 +73,4 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     def get_like_count(self, obj):
         return obj.likes.count()
+    

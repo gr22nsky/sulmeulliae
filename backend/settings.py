@@ -27,8 +27,11 @@ print(DEBUG)
 SECRET_KEY = env('SECRET_KEY')
 OPEN_API_KEY = env('OPENAI_API_KEY')
 
-# ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', '43.201.83.17']
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['api.sulmeulliae.com', '43.201.83.17', 'sulmeulliae.com', '127.0.0.1']
+
+
+ALLOWED_HOSTS = ["*"]
+
 
 # Application definition
 
@@ -50,6 +53,7 @@ INSTALLED_APPS = [
     "accounts",
     "evaluations",
     "community",
+    "chatbot",
 ]
 
 MIDDLEWARE = [
@@ -157,22 +161,21 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 
-STATIC_URL = env("STATIC_URL", default="/static/")
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = env("STATIC_ROOT", default=BASE_DIR / "staticfiles")
-
-# Media files
-MEDIA_URL = env("MEDIA_URL", default="/media/")
-MEDIA_ROOT = env("MEDIA_ROOT", default=BASE_DIR / "media")
-
-# STATIC_URL = "/static/"
+# STATIC_URL = env("STATIC_URL", default="/static/")
 # STATICFILES_DIRS = [BASE_DIR / "static"]
-# STATIC_ROOT = BASE_DIR / "staticfiles"
-#
-# # Media files
-# MEDIA_URL = "/media/"
-# MEDIA_ROOT = BASE_DIR / "media"
+# STATIC_ROOT = env("STATIC_ROOT", default=BASE_DIR / "staticfiles")
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# # Media files
+# MEDIA_URL = env("MEDIA_URL", default="/media/")
+# MEDIA_ROOT = env("MEDIA_ROOT", default=BASE_DIR / "media")
+MEDIA_URL = '/media/'  # 미디어 파일을 접근할 URL 경로
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # 미디어 파일이 저장될 디렉토리 경로
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -181,7 +184,20 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # CORS_ALLOWED_ORIGINS = [
 #     'https://localhost:3000',
 #     'https://127.0.0.1:3000',
-#     'https://d6ug251fymee6.cloudfront.net',
+#     'https://api.sulmeulliae.com',
 #     'https://sulmeulliae.com'
 # ]
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
+
+# CORS_ALLOW_HEADERS = [
+#     "content-type",
+#     "authorization",
+# ]
+
+OPENAI_API_KEY = env('OPENAI_API_KEY')
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://api.sulmeulliae.com',
+    'https://sulmeulliae.com',
+]

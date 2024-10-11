@@ -10,8 +10,9 @@ class User(AbstractUser):
     birth = models.DateField(null=True)
     adult_verification = models.BooleanField(default=False)
     profile_image = models.ImageField(upload_to="profile_images/", blank=True)
+    points = models.IntegerField(default=0)
     followings = models.ManyToManyField("self", related_name="followers", symmetrical=False)
-
+  
     def __str__(self):
         return self.username
 
