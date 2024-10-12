@@ -144,3 +144,21 @@ class UserPasswordUpdateAPIView(APIView):
         return Response(
             {"message": "비밀번호가 성공적으로 변경되었습니다."}, status=200
         )
+
+
+class BlindAPIView(APIView):
+
+    def post(self, request, username):
+        blinded = get_object_or_404(User, username=username)
+        user = request.user
+        if blinded == user:
+            return Response({"message": "잘못된 접근입니다."}, status=403)
+
+        if blinded in user.blinded_user.all():
+            user.blinded_user.remove(blinded)
+            return Response(
+                {"message": f" {username}을 블라인딩 해제 하셨습니다."}, status=200
+            )
+
+        user.blinded_user.add(blinded)
+        return Response({"message": f" {username}을 블라인딩 하셨습니다."}, status=200)

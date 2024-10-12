@@ -11,4 +11,5 @@ urlpatterns = [
     path("token_refresh/", TokenRefreshView.as_view()),
     path("info/", views.UserInfoView.as_view()),
     path("<str:username>/", views.UserProfileAPIView.as_view()),
+    path("<str:username>/blind/", views.BlindAPIView.as_view()), 
 ]
