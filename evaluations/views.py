@@ -75,8 +75,9 @@ class ReviewListAPIView(APIView):
         return get_object_or_404(Evaluation, pk=pk)
 
     def get(self, request, pk):
+        user = request.user
         evaluation = self.get_object(pk=pk)
-        reviews = evaluation.reviews.all()
+        reviews = evaluation.reviews.all().exclude(author__in=user.blinded_user.all())
 
         # 정렬
         sort = request.GET.get("sort")
@@ -104,11 +105,11 @@ class ReviewListAPIView(APIView):
 
 
 class ReviewDetailAPIView(APIView):
-    def get_object(self, pk):
-        return get_object_or_404(Review, pk=pk)
-
     def get(self, request, pk):
-        review = self.get_object(pk=pk)
+        user = request.user
+        review = get_object_or_404(
+            Review.objects.filter(pk=pk).exclude(author__in=user.blinded_user.all())
+        )
         serializer = ReviewSerializer(review)
         return Response(serializer.data)
 
