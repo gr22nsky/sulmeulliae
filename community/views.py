@@ -1,12 +1,13 @@
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, UpdateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 
-from .paginations import CommunityPagination,CommentPagination
+from .paginations import CommunityPagination, CommentPagination
 from .models import Community, Comment, Image, Category
 from .serializers import (
     CommunityListSerializer,
@@ -22,9 +23,20 @@ class CommunityListAPIView(ListCreateAPIView):
     serializer_class = CommunityListSerializer
     # pagination_class = CommunityPagination
 
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowAny()]
+        return [IsAuthenticated()]
+
+    # 차단된 사람 제외
     def get(self, request, *args, **kwargs):
-        self.permission_classes = [AllowAny]
-        community = self.queryset
+        user = request.user
+        if user.is_authenticated:
+            community = Community.objects.filter(is_deleted=False).exclude(
+                author__in=user.blinded_user.all()
+            )
+        else:
+            community = self.queryset
 
         # 검색기능
         search_query = request.query_params.get("search", None)
@@ -56,8 +68,6 @@ class CommunityListAPIView(ListCreateAPIView):
         self.serializer_class = CommunityCreateSerializer
         images = request.FILES.getlist("images")
 
-        # if not images:
-        #     return Response({"ERROR": "Image file is required."}, status=400)
         return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):
@@ -73,13 +83,15 @@ class CommunityDetailAPIView(UpdateAPIView):
     serializer_class = CommunityDetailSerializer
     # pagination_class = CommunityPagination
 
-    def get_permissions(self):
-        if self.request.method == "GET":
-            return [AllowAny()]
-        return [IsAuthenticated()]
-
+    # 차단된 사람 제외
     def get(self, request, pk):
-        community = get_object_or_404(Community, pk=pk)
+        user = request.user
+        community = get_object_or_404(
+            Community.objects.filter(pk=pk, is_deleted=False).exclude(
+                author__in=user.blinded_user.all()
+            )
+        )
+
         serializer = CommunityDetailSerializer(community)
         return Response(serializer.data, status=200)
 
@@ -112,6 +124,11 @@ class CommunityDetailAPIView(UpdateAPIView):
         serializer.save()
 
     def delete(self, request, pk):
+        author = community.author
+        user = request.user
+        if user != author:
+            return Response({"error": "이 글을 쓴 본인이 아닙니다."}, status=403)
+        
         community = get_object_or_404(Community, pk=pk)
         self.check_object_permissions(request, community)
         community.delete()
@@ -120,7 +137,6 @@ class CommunityDetailAPIView(UpdateAPIView):
 
 # 커뮤니티 좋아요 기능
 class CommunityLikeAPIView(APIView):
-    permission_classes = [IsAuthenticated]  # 회원만 접근 가능
 
     def post(self, request, pk):
         community = get_object_or_404(Community, pk=pk, is_deleted=False)
@@ -149,14 +165,23 @@ class CommentListAPIView(ListCreateAPIView):
     pagination_class = CommentPagination
 
     def get(self, request, pk):
-        community = Community.objects.get(pk=pk, is_deleted=False)
-        comments = community.comment_community.filter(is_deleted=False)
-        # comment = self.queryset
+        user = self.request.user
+        # 차단한 유저가 쓴 커뮤니티는 조회 하지 않음
+        community = (
+            Community.objects.filter(pk=pk, is_deleted=False)
+            .exclude(author__in=user.blinded_user.all())
+            .first()
+        )
+        comments = Comment.objects.filter(community_id=pk, is_deleted=False).exclude(
+            author__in=user.blinded_user.all()
+        )
+
+        # comments = self.queryset
         serializer = CommentSerializer(comments, many=True)
         # 정렬기능
         # sort = request.query_params.get("sort", None)
         # if sort == "like":
-        #     comment = comment.order_by("like")
+        #     comment = comment.order_by("-like_count")
         # else:
         #     comment = comment.order_by("-created_at")
         # self.queryset = comment
@@ -172,12 +197,7 @@ class CommentListAPIView(ListCreateAPIView):
 
 # 댓글 수정 및 삭제
 class CommentEditAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-    def get(self, request, pk):
-        comment = get_object_or_404(Comment, pk=pk, is_deleted=False)
-        serializer = CommentSerializer(comment)
-        return Response(serializer.data, status=200)
-    
+
     def put(self, request, pk):
         comment = get_object_or_404(Comment, pk=pk, is_deleted=False)
         author = comment.author
