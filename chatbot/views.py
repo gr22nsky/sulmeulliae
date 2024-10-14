@@ -2,13 +2,15 @@ import requests
 from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from evaluations.models import Evaluation
+from .models import Suggestion
 from .chatbot import sulmeulliae_bot
 
 class ChatBotAPIView(APIView):
 
     def translate_text(self, text, target_lang):
 
-        url = "https://api-free.deepl.com/v2/translate"
+        url= "https://api-free.deepl.com/v2/translate" 
         params = {
             'auth_key': settings.DEEPL_API_KEY,
             'text': text,
@@ -26,20 +28,29 @@ class ChatBotAPIView(APIView):
             }, status=400)
 
     def post(self, request):
+        
+        liquors = []
+        for evaluation in Evaluation.objects.all():  # Evaluation 모델에서 모든 객체 가져오기
+            liquors.append(evaluation.title)
+
         user = request.user  # 현재 로그인된 사용자
         data = request.data
-        message = data.get("message", "")
-        print (message)
-        
+        message = data.get("message", "") 
+
         # 포인트 확인
         if user.points > 0:
             user.points -= 1  # 1포인트 차감 
             user.save()
             
             message_transleat = self.translate_text(message,'EN')
-            print(message_transleat)
+
             # 챗봇 로직 호출
-            sulmeulliae_message = self.translate_text(sulmeulliae_bot(message_transleat),'KO')
+            sulmeulliae_message = self.translate_text(sulmeulliae_bot(message_transleat,liquors),'KO')
+
+            suggestion = Suggestion.objects.create(
+                suggestion = sulmeulliae_message,
+                feeling = data.get("message", "")
+            )
 
             return Response({
                 "sulmeulliae_message": sulmeulliae_message,
