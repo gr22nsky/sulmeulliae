@@ -16,8 +16,8 @@ class EvaluationListAPIView(APIView):
         evaluations = Evaluation.objects.all()
         # 정렬
         sort = request.GET.get("sort")
-        if sort == "likes":
-            evaluations = evaluations.order_by("-likes", "-created_at")
+        if sort == "like":
+            evaluations = evaluations.order_by("-like_count", "-created_at")
         elif sort == "viewcounts":
             evaluations = evaluations.order_by("-viewcounts", "-created_at")
         elif sort == "rating":
@@ -56,10 +56,14 @@ class EvaluationLikeAPIView(APIView):
         user = request.user
         if evaluation.likes.filter(pk=user.pk).exists():
             evaluation.likes.remove(user)
-            return Response(status=204)
+            result = 204
         else:
             evaluation.likes.add(user)
-        return Response(status=200)
+            result = 200
+
+        evaluation.like_count = evaluation.likes.count()
+        evaluation.save(update_fields=["like_count"])
+        return Response(status=result)
 
 
 class UserLikedEvaluationAPIView(APIView):
@@ -80,8 +84,8 @@ class ReviewListAPIView(APIView):
 
         # 정렬
         sort = request.GET.get("sort")
-        if sort == "likes":
-            reviews = reviews.order_by("-likes", "-created_at")
+        if sort == "like":
+            reviews = reviews.order_by("-like_count", "-created_at")
         else:
             reviews = reviews.order_by("-created_at")
         # 페이지네이션
@@ -134,9 +138,14 @@ class ReviewLikeAPIView(APIView):
 
         if review.likes.filter(pk=user.pk).exists():
             review.likes.remove(user)
+            result = 204
         else:
             review.likes.add(user)
-        return Response(status=200)
+            result = 200
+
+        review.like_count = review.likes.count()
+        review.save(update_fields=["like_count"])
+        return Response(status=result)
 
 
 class UserLikedReviewAPIView(APIView):

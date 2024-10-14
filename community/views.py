@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, UpdateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 
-from .paginations import CommunityPagination,CommentPagination
+from .paginations import CommunityPagination, CommentPagination
 from .models import Community, Comment, Image, Category
 from .serializers import (
     CommunityListSerializer,
@@ -45,7 +45,7 @@ class CommunityListAPIView(ListCreateAPIView):
         elif sort == "title":
             community = community.order_by("title")
         elif sort == "like":
-            community = community.order_by("-like_count","-created_at")
+            community = community.order_by("-like_count", "-created_at")
         else:
             community = community.order_by("-created_at")
 
@@ -126,13 +126,13 @@ class CommunityLikeAPIView(APIView):
 
         if request.user in community.likes.all():
             community.likes.remove(request.user)
-            result=204
+            result = 204
         else:
             community.likes.add(request.user)
-            result=200
+            result = 200
 
-        community.like_count = community.likes.count() 
-        community.save(update_fields=['like_count'])
+        community.like_count = community.likes.count()
+        community.save(update_fields=["like_count"])
         return Response(status=result)
 
 
@@ -176,11 +176,12 @@ class CommentListAPIView(ListCreateAPIView):
 # 댓글 수정 및 삭제
 class CommentEditAPIView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request, pk):
         comment = get_object_or_404(Comment, pk=pk, is_deleted=False)
         serializer = CommentSerializer(comment)
         return Response(serializer.data, status=200)
-    
+
     def put(self, request, pk):
         comment = get_object_or_404(Comment, pk=pk, is_deleted=False)
         author = comment.author
@@ -215,13 +216,13 @@ class CommentLikeAPIView(APIView):
 
         if request.user in comment.likes.all():
             comment.likes.remove(request.user)
-            result=204
+            result = 204
         else:
             comment.likes.add(request.user)
-            result=200
+            result = 200
 
-        comment.like_count = comment.likes.count() 
-        comment.save(update_fields=['like_count'])
+        comment.like_count = comment.likes.count()
+        comment.save(update_fields=["like_count"])
         return Response(status=result)
 
 
