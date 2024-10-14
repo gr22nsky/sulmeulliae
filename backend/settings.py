@@ -47,11 +47,13 @@ INSTALLED_APPS = [
     "django_extensions",
     'debug_toolbar',
     'corsheaders',
+    'channels',
     # local apps
     "accounts",
     "evaluations",
     "community",
     "chatbot",
+    "chat",
 ]
 
 MIDDLEWARE = [
@@ -195,7 +197,27 @@ CORS_ALLOW_ALL_ORIGINS = True
 OPENAI_API_KEY = env('OPENAI_API_KEY')
 
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://api.sulmeulliae.com',
-    'https://sulmeulliae.com',
+# CSRF_TRUSTED_ORIGINS = [
+#     'https://api.sulmeulliae.com',
+#     'https://sulmeulliae.com',
+# ]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React 프론트엔드가 실행되는 URL
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",  # WebSocket 요청을 허용하는 프론트엔드 URL
+]
+# ASGI 설정
+ASGI_APPLICATION = 'backend.asgi.application'
+
+# Channels Layer 설정 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
