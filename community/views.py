@@ -209,17 +209,20 @@ class CommentEditAPIView(APIView):
 
 # 커뮤니티 댓글 좋아요 기능
 class CommentLikeAPIView(APIView):
-    permission_classes = [IsAuthenticated]  # 회원만 접근 가능
 
     def post(self, request, pk):
         comment = get_object_or_404(Comment, pk=pk, is_deleted=False)
 
         if request.user in comment.likes.all():
             comment.likes.remove(request.user)
-            return Response(status=204)
+            result=204
+        else:
+            comment.likes.add(request.user)
+            result=200
 
-        comment.likes.add(request.user)
-        return Response(status=200)
+        comment.like_count = comment.likes.count() 
+        comment.save(update_fields=['like_count'])
+        return Response(status=result)
 
 
 # 유저가 좋아요한 댓글 리스트 조회
