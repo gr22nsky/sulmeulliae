@@ -45,7 +45,7 @@ class CommunityListAPIView(ListCreateAPIView):
         elif sort == "title":
             community = community.order_by("title")
         elif sort == "like":
-            community = community.order_by("-like")
+            community = community.order_by("-like_count","-created_at")
         else:
             community = community.order_by("-created_at")
 
@@ -120,17 +120,20 @@ class CommunityDetailAPIView(UpdateAPIView):
 
 # 커뮤니티 좋아요 기능
 class CommunityLikeAPIView(APIView):
-    permission_classes = [IsAuthenticated]  # 회원만 접근 가능
 
     def post(self, request, pk):
         community = get_object_or_404(Community, pk=pk, is_deleted=False)
 
         if request.user in community.likes.all():
             community.likes.remove(request.user)
-            return Response(status=204)
+            result=204
+        else:
+            community.likes.add(request.user)
+            result=200
 
-        community.likes.add(request.user)
-        return Response(status=200)
+        community.like_count = community.likes.count() 
+        community.save(update_fields=['like_count'])
+        return Response(status=result)
 
 
 # 유저가 좋아요한 커뮤니티 리스트 조회
@@ -156,7 +159,7 @@ class CommentListAPIView(ListCreateAPIView):
         # 정렬기능
         # sort = request.query_params.get("sort", None)
         # if sort == "like":
-        #     comment = comment.order_by("like")
+        #     comment = comment.order_by("-like_count")
         # else:
         #     comment = comment.order_by("-created_at")
         # self.queryset = comment
