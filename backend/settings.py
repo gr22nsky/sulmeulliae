@@ -24,7 +24,7 @@ print(DEBUG)
 # Raises Django's ImproperlyConfigured
 # exception if SECRET_KEY not in os.environ
 SECRET_KEY = env('SECRET_KEY')
-
+DEEPL_API_KEY= env('DEEPL_API_KEY')
 # ALLOWED_HOSTS = ['api.sulmeulliae.com', '43.201.83.17', 'sulmeulliae.com', '127.0.0.1']
 
 
@@ -185,7 +185,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 #     'https://api.sulmeulliae.com',
 #     'https://sulmeulliae.com'
 # ]
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
 # CORS_ALLOW_HEADERS = [
 #     "content-type",

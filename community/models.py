@@ -21,6 +21,7 @@ class Community(models.Model):
     likes = models.ManyToManyField(
         get_user_model(), related_name="community_like", blank=True
     )
+    like_count = models.PositiveIntegerField(default=0)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     is_deleted = models.BooleanField(default=False)
 
@@ -53,6 +54,7 @@ class Comment(models.Model):
     likes = models.ManyToManyField(
         get_user_model(), related_name="comment_like", blank=True
     )
+    like_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.content

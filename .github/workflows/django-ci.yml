@@ -30,5 +30,6 @@ jobs:
         POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
         POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
         DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
         python manage.py test

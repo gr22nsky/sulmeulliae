@@ -46,6 +46,7 @@ class Migration(migrations.Migration):
                 ("view_count", models.PositiveIntegerField(blank=True, default=0)),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("updated_at", models.DateTimeField(auto_now=True)),
+                ("like_count", models.PositiveIntegerField(default=0)),
                 ("is_deleted", models.BooleanField(default=False)),
                 (
                     "author",
@@ -111,6 +112,7 @@ class Migration(migrations.Migration):
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("updated_at", models.DateTimeField(auto_now=True)),
                 ("is_deleted", models.BooleanField(default=False)),
+                ("like_count", models.PositiveIntegerField(default=0)),
                 (
                     "author",
                     models.ForeignKey(
