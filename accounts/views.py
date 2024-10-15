@@ -29,8 +29,8 @@ class UserAPIView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            response_dict = {
+            User.objects.create_user(**request.data)
+            response_dict = {  
                 "message":  "이메일 인증 메일이 발송되었습니다. 이메일을 확인해 주세요."
             }
             return Response(response_dict, status=201)
@@ -74,6 +74,7 @@ class VerifyEmailView(APIView):
             user = User.objects.get(pk=uid)
             if account_activation_token.check_token(user, token):
                 user.is_active = True  # 이메일 인증 시 활성화
+                user.is_email_verified =True # 이메일 인증
                 user.save()
                 return Response({'message': '이메일 인증이 완료되었습니다!'}, status=200)
             else:
