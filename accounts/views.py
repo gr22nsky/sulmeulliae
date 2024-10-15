@@ -35,6 +35,11 @@ class UserAPIView(APIView):
 
         user = User.objects.create_user(**request.data)
         refresh = RefreshToken.for_user(user)  # 토큰 발급
+        if user is not None:
+            # 마지막 로그인 시간이 24시간 이상 차이가 나면 포인트 지급
+            if user.last_login is None or (timezone.now() - user.last_login) > timedelta(hours=24):
+                user.points += 3  # 3포인트 추가
+                user.save()
         user.last_login = timezone.now()
         user.save(update_fields=["last_login"])
 
@@ -99,7 +104,6 @@ class UserSigninAPIView(APIView):
 
 
 class UserProfileAPIView(APIView):
-    permission_classes = [AllowAny]
 
     def get(self, request, username):
         user = get_object_or_404(User, username=username, is_active=True)
@@ -107,6 +111,27 @@ class UserProfileAPIView(APIView):
         serializer = UserProfileSerializer(user)
         return Response(serializer.data)
 
+    def post(self, request, username):
+        user = get_object_or_404(User, username=username, is_active=True)
+        if request.user == user:
+            return Response(
+                {"message":"자신을 팔로우 할 수 없습니다."}, status=400
+            )
+        if not request.user.followings.filter(id=user.id).exists():
+            request.user.followings.add(user)
+            return Response(
+                {"message":"팔로우 하였습니다."}, status=200
+            )
+        else:
+            request.user.followings.remove(user)
+            return Response(
+                {"message":"언팔로우 하였습니다."}, status=200
+            )
+    
+    
+    
+    
+    
 class UserInfoView(APIView):
     def get(self, request):
         user = request.user
