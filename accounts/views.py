@@ -29,7 +29,7 @@ class UserAPIView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.save()
+            serializer.save()
             response_dict = {
                 "message":  "이메일 인증 메일이 발송되었습니다. 이메일을 확인해 주세요."
             }
@@ -72,7 +72,6 @@ class VerifyEmailView(APIView):
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
-            print(user)
             if account_activation_token.check_token(user, token):
                 user.is_active = True  # 이메일 인증 시 활성화
                 user.save()
@@ -174,6 +173,24 @@ class UserPasswordUpdateAPIView(APIView):
         return Response(
             {"message": "비밀번호가 성공적으로 변경되었습니다."}, status=200
         )
+
+
+class BlindAPIView(APIView):
+
+    def post(self, request, username):
+        blinded = get_object_or_404(User, username=username)
+        user = request.user
+        if blinded == user:
+            return Response({"message": "잘못된 접근입니다."}, status=403)
+
+        if blinded in user.blinded_user.all():
+            user.blinded_user.remove(blinded)
+            return Response(
+                {"message": f" {username}을 블라인딩 해제 하셨습니다."}, status=200
+            )
+
+        user.blinded_user.add(blinded)
+        return Response({"message": f" {username}을 블라인딩 하셨습니다."}, status=200)
 
 
 class UserLikesAPIView(APIView):

@@ -14,7 +14,8 @@ class User(AbstractUser):
     followings = models.ManyToManyField("self", related_name="followers", symmetrical=False)
     is_email_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
-    
+    blind = models.ManyToManyField('self', symmetrical=False, related_name='blinded_user', blank=True)
+
     def __str__(self):
         return self.username
 

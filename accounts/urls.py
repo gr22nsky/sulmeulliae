@@ -15,4 +15,6 @@ urlpatterns = [
     path("info/", views.UserInfoView.as_view()),
     path("<str:username>/", views.UserProfileAPIView.as_view()), #post로 보낼시 팔로우
     path('<str:username>/likes_all/', views.UserLikesAPIView.as_view(), name='user-likes'),
+    path("<str:username>/blind/", views.BlindAPIView.as_view()), 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)   
+
