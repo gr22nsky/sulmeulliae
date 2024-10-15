@@ -222,7 +222,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 #     'https://api.sulmeulliae.com',
 #     'https://sulmeulliae.com'
 # ]
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
 
 OPENAI_API_KEY = env('OPENAI_API_KEY')
@@ -231,7 +231,6 @@ OPENAI_API_KEY = env('OPENAI_API_KEY')
 CSRF_TRUSTED_ORIGINS = [
     'https://api.sulmeulliae.com',
     'https://sulmeulliae.com',
-    "http://localhost:3000",  # WebSocket 요청을 허용하는 프론트엔드 URL
 ]
 
 # ASGI 설정
