@@ -57,7 +57,7 @@ class CommunityListAPIView(ListCreateAPIView):
         elif sort == "title":
             community = community.order_by("title")
         elif sort == "like":
-            community = community.order_by("-like")
+            community = community.order_by("-like_count", "-created_at")
         else:
             community = community.order_by("-created_at")
 
@@ -143,10 +143,14 @@ class CommunityLikeAPIView(APIView):
 
         if request.user in community.likes.all():
             community.likes.remove(request.user)
-            return Response(status=204)
+            result = 204
+        else:
+            community.likes.add(request.user)
+            result = 200
 
-        community.likes.add(request.user)
-        return Response(status=200)
+        community.like_count = community.likes.count()
+        community.save(update_fields=["like_count"])
+        return Response(status=result)
 
 
 # 유저가 좋아요한 커뮤니티 리스트 조회
@@ -197,6 +201,12 @@ class CommentListAPIView(ListCreateAPIView):
 
 # 댓글 수정 및 삭제
 class CommentEditAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        comment = get_object_or_404(Comment, pk=pk, is_deleted=False)
+        serializer = CommentSerializer(comment)
+        return Response(serializer.data, status=200)
 
     def put(self, request, pk):
         comment = get_object_or_404(Comment, pk=pk, is_deleted=False)
@@ -226,17 +236,20 @@ class CommentEditAPIView(APIView):
 
 # 커뮤니티 댓글 좋아요 기능
 class CommentLikeAPIView(APIView):
-    permission_classes = [IsAuthenticated]  # 회원만 접근 가능
 
     def post(self, request, pk):
         comment = get_object_or_404(Comment, pk=pk, is_deleted=False)
 
         if request.user in comment.likes.all():
             comment.likes.remove(request.user)
-            return Response(status=204)
+            result = 204
+        else:
+            comment.likes.add(request.user)
+            result = 200
 
-        comment.likes.add(request.user)
-        return Response(status=200)
+        comment.like_count = comment.likes.count()
+        comment.save(update_fields=["like_count"])
+        return Response(status=result)
 
 
 # 유저가 좋아요한 댓글 리스트 조회

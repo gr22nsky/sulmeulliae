@@ -16,6 +16,7 @@ urlpatterns = [
     ),
     path("<int:pk>/review/", views.ReviewListAPIView.as_view(), name="review"),
     path("review/<int:pk>/", views.ReviewDetailAPIView.as_view(), name="review_detail"),
+    path('<int:pk>/review_summary/', views.ReviewSummaryAPIView.as_view(), name='review-summary'),
     path("review/<int:pk>/like/", views.ReviewLikeAPIView.as_view(), name="like"),
     path(
         "liked_reviews/",
