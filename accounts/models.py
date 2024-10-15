@@ -12,7 +12,6 @@ class User(AbstractUser):
     profile_image = models.ImageField(upload_to="profile_images/", blank=True)
     points = models.IntegerField(default=0)
     followings = models.ManyToManyField("self", related_name="followers", symmetrical=False)
-  
     def __str__(self):
         return self.username
 

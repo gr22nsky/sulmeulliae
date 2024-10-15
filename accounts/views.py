@@ -128,10 +128,6 @@ class UserProfileAPIView(APIView):
                 {"message":"언팔로우 하였습니다."}, status=200
             )
     
-    
-    
-    
-    
 class UserInfoView(APIView):
     def get(self, request):
         user = request.user
