@@ -32,5 +32,6 @@ jobs:
         DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
+        EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
       run: |
         python manage.py test
