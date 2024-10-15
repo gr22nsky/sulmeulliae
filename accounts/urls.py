@@ -10,7 +10,6 @@ urlpatterns = [
     path("password_update/", views.UserPasswordUpdateAPIView.as_view()),
     path("token_refresh/", TokenRefreshView.as_view()),
     path("info/", views.UserInfoView.as_view()),
-    path("profile/<str:username>/", views.UserProfileAPIView.as_view()),
-    path("profile/<str:username>/like/", views.UserProfileAPIView.as_view()),
-
+    path("<str:username>/", views.UserProfileAPIView.as_view()),
+    path("<str:username>/blind/", views.BlindAPIView.as_view()), 
 ]

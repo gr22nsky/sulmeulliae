@@ -12,7 +12,8 @@ class User(AbstractUser):
     profile_image = models.ImageField(upload_to="profile_images/", blank=True)
     points = models.IntegerField(default=0)
     followings = models.ManyToManyField("self", related_name="followers", symmetrical=False)
-  
+    blind = models.ManyToManyField('self', symmetrical=False, related_name='blinded_user', blank=True)
+
     def __str__(self):
         return self.username
 

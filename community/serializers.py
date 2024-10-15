@@ -22,7 +22,6 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class CommunityListSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField()
-    like_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Community
@@ -36,14 +35,11 @@ class CommunityListSerializer(serializers.ModelSerializer):
             "category",
         )
 
-    def get_like_count(self, obj):
-        return obj.likes.count()
 
 
 class CommunityCreateSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField(read_only=True)
     author = serializers.StringRelatedField(read_only=True)
-    like_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Community
@@ -56,7 +52,6 @@ class CommunityCreateSerializer(serializers.ModelSerializer):
             "author",
             "view_count",
             "likes",
-            "like_count",
         )
         write_only_fields = ("content",)
 
@@ -66,15 +61,11 @@ class CommunityCreateSerializer(serializers.ModelSerializer):
                 instance.community_image.values_list("image_url", flat=True)
             )  # 이미지 URL 반환
         return None
-
-    def get_like_count(self, obj):
-        return obj.likes.count()
-
+    
 
 class CommunityDetailSerializer(serializers.ModelSerializer):
     community_image = ImageSerializer(many=True)
     author = serializers.StringRelatedField(read_only=True)
-    like_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Community
@@ -97,17 +88,12 @@ class CommunityDetailSerializer(serializers.ModelSerializer):
         instance.save(update_fields=["view_count"])
         return super().to_representation(instance)
 
-    def get_like_count(self, obj):
-        return obj.likes.count()
 
 
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField()
-    like_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
         fields = ("id", "author", "content", "created_at", "updated_at", "like_count", "likes")
 
-    def get_like_count(self, obj):
-        return obj.likes.count()

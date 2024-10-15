@@ -51,6 +51,7 @@ class Evaluation(models.Model):
     likes = models.ManyToManyField(
         settings.AUTH_USER_MODEL, blank=True, related_name="like_evaluation"
     )
+    like_count = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     # 중계테이블에서 가져오기
@@ -97,6 +98,7 @@ class Review(models.Model):
     likes = models.ManyToManyField(
         settings.AUTH_USER_MODEL, blank=True, related_name="like_review"
     )
+    like_count = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -110,3 +112,12 @@ class Review(models.Model):
 
     def __str__(self):
         return self.content
+
+
+class ReviewSummary(models.Model):
+    evaluation = models.ForeignKey(
+        Evaluation, on_delete=models.CASCADE, related_name="reviews_summary"
+    )
+    summary = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
