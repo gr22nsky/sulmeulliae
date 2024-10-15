@@ -10,9 +10,17 @@ from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import User
 from .validators import validate_user_data
-from .serializers import UserSerializer, UserProfileSerializer
+from .serializers import (
+    UserSerializer, 
+    UserProfileSerializer, 
+    LikedEvaluationSerializer, 
+    LikedReviewSerializer,
+    LikedCommunitySerializer, 
+    LikedCommentSerializer)
 from django.utils import timezone
 from datetime import timedelta
+from evaluations.models import Evaluation, Review
+from community.models import Community, Comment
 
 class UserAPIView(APIView):
     def get_permissions(self):
@@ -50,11 +58,11 @@ class UserAPIView(APIView):
     def put(self, request):
         user = request.user
         nickname = request.data.get("nickname")
-        profile_images = request.data.get("profile_images")
+        profile_image = request.FILES.get("profile_image")
         if nickname:
             user.nickname = nickname
-        if profile_images:
-            user.profile_image = profile_images
+        if profile_image:
+            user.profile_image = profile_image
         user.save()
         serializer = UserProfileSerializer(user)
         return Response(
@@ -139,3 +147,25 @@ class UserPasswordUpdateAPIView(APIView):
         return Response(
             {"message": "비밀번호가 성공적으로 변경되었습니다."}, status=200
         )
+
+
+class UserLikesAPIView(APIView):
+    def get(self, request, username):
+        user = get_object_or_404(User, username=username)
+
+        liked_evaluations = Evaluation.objects.filter(likes=user)
+        liked_reviews = Review.objects.filter(likes=user)
+        liked_communities = Community.objects.filter(likes=user)
+        liked_comments = Comment.objects.filter(likes=user)
+
+        evaluations_serializer = LikedEvaluationSerializer(liked_evaluations, many=True)
+        reviews_serializer = LikedReviewSerializer(liked_reviews, many=True)
+        communities_serializer = LikedCommunitySerializer(liked_communities, many=True)
+        comments_serializer = LikedCommentSerializer(liked_comments, many=True)
+
+        return Response({
+            'liked_evaluations': evaluations_serializer.data,
+            'liked_reviews': reviews_serializer.data,
+            'liked_communities': communities_serializer.data,
+            'liked_comments': comments_serializer.data,
+        })

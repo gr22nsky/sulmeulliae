@@ -22,6 +22,4 @@ urlpatterns = [
         views.UserLikedReviewAPIView.as_view(),
         name="user_liked_reviews",
     ),
-]
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
