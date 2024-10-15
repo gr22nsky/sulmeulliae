@@ -7,7 +7,7 @@ from .models import Suggestion
 from .chatbot import sulmeulliae_bot
 
 class ChatBotAPIView(APIView):
-
+    # deepl을 이용해서 번역기능
     def translate_text(self, text, target_lang):
 
         url= "https://api-free.deepl.com/v2/translate" 

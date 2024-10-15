@@ -1,12 +1,14 @@
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from django.conf import settings
+from django.db.models import Q
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from .models import Evaluation, Review, ReviewSummary
-from django.db.models import Q
 from .serializers import EvaluationSerializer, ReviewSerializer
-from django.core.paginator import Paginator
-from django.conf import settings
+from datetime import timedelta
 import requests
 
 
@@ -134,20 +136,66 @@ class ReviewDetailAPIView(APIView):
 
 
 class ReviewSummaryAPIView(APIView):
+    def translate_text(self, text, target_lang):
+
+        url = "https://api-free.deepl.com/v2/translate"
+        params = {
+            "auth_key": settings.DEEPL_API_KEY,
+            "text": text,
+            "target_lang": target_lang,
+        }
+
+        response = requests.post(url, data=params)
+        response_data = response.json()
+
+        if "translations" in response_data:
+            return response_data["translations"][0]["text"]
+        else:
+            return Response(
+                {"Translation error:": +response_data.get("message", "Unknown error")},
+                status=400,
+            )
 
     def post(self, request, pk):
         reviews = []
         evaluation = get_object_or_404(Evaluation, pk=pk)
 
         # 평가에 연결된 모든 리뷰를 내용 추가
-        for review in evaluation.reviews.all():
+        for review in evaluation.reviews.all().order_by("-like_count", "-created_at")[
+            :100
+        ]:
             reviews.append(review.content)
+        # 리뷰를 영어로 번역
+        reviews_translation = self.translate_text(" ".join(reviews), "EN")
+        summary = self.summarize_reviews(reviews_translation)
+        print(summary)
+        # 요약을 한국어로 번역
+        summary_translation = self.translate_text(summary, "KO")
 
-        summary = self.summarize_reviews(reviews)
+        # 기존 요약 가져오기 또는 생성
+        review_summary, created = ReviewSummary.objects.get_or_create(
+            evaluation=evaluation
+        )
 
-        # 요약해준 리뷰 내용 DB에 저장
-        ReviewSummary.objects.create(evaluation=evaluation, summary=summary)
-        return Response({"summary": summary}, status=200)
+        # 3개월이 지났으면 요약 갱신
+        if not created and (timezone.now() - review_summary.updated_at) > timedelta(
+            days=90
+        ):
+            review_summary.summary = summary_translation
+            review_summary.save()
+            return Response({"summary": summary_translation, "updated": True}, status=200)
+
+        # 처음 생성된 경우
+        if created:
+            review_summary.summary = summary_translation
+            review_summary.save()
+            return Response({"summary": summary_translation, "created": True}, status=200)
+
+        # 이미 최신 요약이 있는 경우
+        return Response(
+            {"summary": review_summary.summary, "updated": False}, status=200
+        )
+
 
     def summarize_reviews(self, reviews):
         api_key = settings.OPENAI_API_KEY
@@ -163,7 +211,7 @@ class ReviewSummaryAPIView(APIView):
                     "role": "user",
                     "content": """Summarize the overall description of the following reviews. 
                     Summarize in 3 to 4 sentences in a polite and concise manner, 
-                    using natural sentence flow,and answer in Korean.: """
+                    using natural sentence flow.: """
                     + " ".join(reviews),
                 }
             ],

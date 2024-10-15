@@ -112,8 +112,12 @@ class Review(models.Model):
 
     def __str__(self):
         return self.content
-    
+
+
 class ReviewSummary(models.Model):
-    evaluation = models.ForeignKey(Evaluation, on_delete=models.CASCADE, related_name="reviews_summary")
+    evaluation = models.ForeignKey(
+        Evaluation, on_delete=models.CASCADE, related_name="reviews_summary"
+    )
     summary = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
