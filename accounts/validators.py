@@ -48,8 +48,8 @@ def validate_user_data(user_data):
     if not validate_email_format(email):
         err_msg.append("유효하지 않은 이메일 형식입니다.")
 
-    elif User.objects.filter(email=email).exists():
-        err_msg.append("이미 존재하는 email 입니다.")
+    # elif User.objects.filter(email=email).exists():
+    #     err_msg.append("이미 존재하는 email 입니다.")
 
     # 에러 메시지가 있는 경우 반환
     if err_msg:

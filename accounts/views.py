@@ -1,15 +1,12 @@
 from django.shortcuts import get_object_or_404
+from .serializers import UserSerializer, UserProfileSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework_simplejwt.token_blacklist.models import (
-    BlacklistedToken,
-    OutstandingToken,
-)
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from .models import User
-from .validators import validate_user_data
 from .serializers import (
     UserSerializer, 
     UserProfileSerializer, 
@@ -21,34 +18,24 @@ from django.utils import timezone
 from datetime import timedelta
 from evaluations.models import Evaluation, Review
 from community.models import Community, Comment
+from .serializers import UserSerializer, UserProfileSerializer
+from django.contrib.auth.tokens import default_token_generator as account_activation_token
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
 
 class UserAPIView(APIView):
-    def get_permissions(self):
-        if self.request.method == "POST":
-            return [AllowAny()]
-        return [IsAuthenticated()]
+    permission_classes = [AllowAny]
 
     def post(self, request):
-        rlt_message = validate_user_data(request.data)
-        if rlt_message:
-            return Response({"message": rlt_message}, status=400)
-
-        user = User.objects.create_user(**request.data)
-        refresh = RefreshToken.for_user(user)  # 토큰 발급
-        if user is not None:
-            # 마지막 로그인 시간이 24시간 이상 차이가 나면 포인트 지급
-            if user.last_login is None or (timezone.now() - user.last_login) > timedelta(hours=24):
-                user.points += 3  # 3포인트 추가
-                user.save()
-        user.last_login = timezone.now()
-        user.save(update_fields=["last_login"])
-
-        serializer = UserSerializer(user)
-        response_dict = serializer.data
-        response_dict["refresh"] = str(refresh)
-        response_dict["access"] = (str(refresh.access_token),)
-        return Response(response_dict)
-
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            response_dict = {
+                "message":  "이메일 인증 메일이 발송되었습니다. 이메일을 확인해 주세요."
+            }
+            return Response(response_dict, status=201)
+        return Response(serializer.errors, status=400)
+    
     # 회원 탈퇴
     def delete(self, request):
         password = request.data.get("password")
@@ -77,6 +64,24 @@ class UserAPIView(APIView):
             },
             status=200,
         )
+
+
+class VerifyEmailView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request, uidb64, token):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+            print(user)
+            if account_activation_token.check_token(user, token):
+                user.is_active = True  # 이메일 인증 시 활성화
+                user.save()
+                return Response({'message': '이메일 인증이 완료되었습니다!'}, status=200)
+            else:
+                return Response({'error': '인증 토큰이 유효하지 않습니다!'}, status=400)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+            return Response({'error': '잘못된 요청입니다!'}, status=400)
 
 
 class UserSigninAPIView(APIView):
@@ -128,6 +133,7 @@ class UserProfileAPIView(APIView):
                 {"message":"언팔로우 하였습니다."}, status=200
             )
     
+
 class UserInfoView(APIView):
     def get(self, request):
         user = request.user
