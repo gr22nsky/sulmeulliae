@@ -12,7 +12,9 @@ class User(AbstractUser):
     profile_image = models.ImageField(upload_to="profile_images/", blank=True)
     points = models.IntegerField(default=0)
     followings = models.ManyToManyField("self", related_name="followers", symmetrical=False)
-  
+    is_email_verified = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
+    
     def __str__(self):
         return self.username
 
