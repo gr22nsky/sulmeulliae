@@ -29,7 +29,7 @@ class UserAPIView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            User.objects.create_user(**request.data)
+            serializer.save()
             response_dict = {  
                 "message":  "이메일 인증 메일이 발송되었습니다. 이메일을 확인해 주세요."
             }
