@@ -19,7 +19,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
-        user.profile_image = 'profile_images/default_profile.jpeg'
         user.is_email_verified = False
         user.save() 
         send_verification_email(user)  # 이메일 인증 메일 전송
