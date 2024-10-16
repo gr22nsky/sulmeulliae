@@ -10,7 +10,7 @@ from . import views
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("username", 'password', "fullname", "nickname", "birth", "email", "points",)
+        fields = ("username", 'password', "fullname", "nickname", "birth", "email", "points", 'profile_image')
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
