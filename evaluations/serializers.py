@@ -12,6 +12,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 class EvaluationSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, read_only=True)
+    summary = serializers.SerializerMethodField(default=None)
 
     class Meta:
         model = models.Evaluation
@@ -29,8 +30,11 @@ class EvaluationSerializer(serializers.ModelSerializer):
             "like_count",
             "likes",
             "images",
+            "summary"
         )
-
+    def get_summary(self, obj):
+        summary = obj.reviews_summary.all().order_by("-updated_at").first()
+        return summary.summary if summary else None
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
