@@ -122,14 +122,14 @@ class ReviewDetailAPIView(APIView):
         return Response(serializer.data)
 
     def put(self, request, pk):
-        review = self.get_object(pk=pk)
+        review = self.get_object_or_404(Review, pk=pk)
         serializer = ReviewSerializer(review, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
 
     def delete(self, request, pk):
-        review = self.get_object(pk=pk)
+        review = self.get_object_or_404(Review, pk=pk)
         if review.author != request.user:
             return Response({"작성자만 리뷰를 삭제할수있습니다."}, status=403)
         review.delete()
