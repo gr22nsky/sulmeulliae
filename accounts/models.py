@@ -9,7 +9,7 @@ class User(AbstractUser):
     nickname = models.CharField(max_length=50)
     birth = models.DateField(null=True)
     adult_verification = models.BooleanField(default=False)
-    profile_image = models.ImageField(upload_to="profile_images/", blank=True)
+    profile_image = models.ImageField(upload_to="profile_images/", blank=True, default="profile_images/default_profile.jpeg")
     points = models.IntegerField(default=0)
     followings = models.ManyToManyField("self", related_name="followers", symmetrical=False)
     is_email_verified = models.BooleanField(default=False)
