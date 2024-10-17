@@ -66,12 +66,12 @@ class CommunityListAPIView(ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         self.serializer_class = CommunityCreateSerializer
-        images = request.FILES.getlist("images")
+        images = request.FILES.getlist("community_image")
 
         return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        images = self.request.FILES.getlist("images")
+        images = self.request.FILES.getlist("community_image")
         community = serializer.save(author=self.request.user)
         for image in images:
             Image.objects.create(community=community, image_url=image)
@@ -113,7 +113,7 @@ class CommunityDetailAPIView(UpdateAPIView):
     # 이미지 수정 로직
     def perform_update(self, serializer):
         instance = serializer.instance
-        images_data = self.request.FILES.getlist("images")
+        images_data = self.request.FILES.getlist("community_image")
 
         # 요청에 이미지가 포함된 경우
         if images_data:

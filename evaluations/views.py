@@ -13,7 +13,6 @@ from rest_framework import status
 import requests
 
 
-
 # Create your views here.
 class EvaluationListAPIView(APIView):
     permission_classes = [AllowAny]

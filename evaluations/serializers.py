@@ -48,13 +48,10 @@ class EvaluationSerializer(serializers.ModelSerializer):
         return ret
 
 
-from rest_framework import serializers
-from .models import Review
-
 class ReviewSerializer(serializers.ModelSerializer):
     rating = serializers.IntegerField()  # CharField에서 IntegerField로 변경
-    evaluation = serializers.PrimaryKeyRelatedField(read_only=True)
-    author = serializers.PrimaryKeyRelatedField(read_only=True)
+    evaluation = serializers.StringRelatedField(read_only=True)
+    author = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = models.Review
