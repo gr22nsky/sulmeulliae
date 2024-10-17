@@ -33,5 +33,7 @@ jobs:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
         EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+        PORT_ONE_API_KEY: ${{ secrets.PORT_ONE_API_KEY }}
+        PORT_ONE_SECRET_KEY : ${{ secrets.PORT_ONE_SECRET_KEY }}
       run: |
         python manage.py test
