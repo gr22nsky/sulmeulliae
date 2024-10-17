@@ -222,7 +222,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 #     'https://api.sulmeulliae.com',
 #     'https://sulmeulliae.com'
 # ]
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 OPENAI_API_KEY = env('OPENAI_API_KEY')
@@ -231,6 +231,7 @@ OPENAI_API_KEY = env('OPENAI_API_KEY')
 CSRF_TRUSTED_ORIGINS = [
     'https://api.sulmeulliae.com',
     'https://sulmeulliae.com',
+    'https://localhost:3000',
 ]
 
 # ASGI 설정
