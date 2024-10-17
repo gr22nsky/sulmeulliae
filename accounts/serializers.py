@@ -35,6 +35,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     blind = serializers.SerializerMethodField(default=None)
+    followings = serializers.StringRelatedField(many=True)
+    followers = serializers.StringRelatedField(many=True)
     followings_count = serializers.SerializerMethodField(default=0)
     followers_count = serializers.SerializerMethodField(default=0)
 
@@ -61,8 +63,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def get_followings(self, obj):
         return [user.username for user in obj.followings.all()]
     
-    def followers(self, obj):
-        return [user.username for user in obj.followers.all()]
+    def get_followers(self, obj):  
+        return [user.username for user in obj.followers.all()]  
 
     def get_followings_count(self, obj):
         return obj.followings.count()
