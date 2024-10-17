@@ -101,7 +101,6 @@ pycparser
 pydantic
 pydantic_core
 Pygments
-PyGObject
 PyHamcrest
 PyJWT
 pyOpenSSL
