@@ -21,7 +21,7 @@ from .serializers import (
 class CommunityListAPIView(ListCreateAPIView):
     queryset = Community.objects.filter(is_deleted=False)
     serializer_class = CommunityListSerializer
-    # pagination_class = CommunityPagination
+    pagination_class = CommunityPagination
 
     def get_permissions(self):
         if self.request.method == "GET":
@@ -182,13 +182,13 @@ class CommentListAPIView(ListCreateAPIView):
 
         # comments = self.queryset
         serializer = CommentSerializer(comments, many=True)
-        # 정렬기능
-        # sort = request.query_params.get("sort", None)
-        # if sort == "like":
-        #     comment = comment.order_by("-like_count")
-        # else:
-        #     comment = comment.order_by("-created_at")
-        # self.queryset = comment
+        #정렬기능
+        sort = request.query_params.get("sort", None)
+        if sort == "like":
+            comment = comment.order_by("-like_count")
+        else:
+            comment = comment.order_by("-created_at")
+        self.queryset = comment
         return Response(serializer.data, status=200)
 
     def post(self, request, pk):
