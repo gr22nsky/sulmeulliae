@@ -222,7 +222,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 #     'https://api.sulmeulliae.com',
 #     'https://sulmeulliae.com'
 # ]
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
 
 OPENAI_API_KEY = env('OPENAI_API_KEY')
