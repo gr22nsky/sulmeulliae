@@ -51,7 +51,6 @@ google-auth-oauthlib
 googleapis-common-protos
 gunicorn
 h11
-hibagent
 httpcore
 httplib2
 httpx
