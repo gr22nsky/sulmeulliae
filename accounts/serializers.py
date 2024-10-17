@@ -10,6 +10,7 @@ from . import views
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
+
         fields = (
             "username",
             "password",
@@ -18,6 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
             "birth",
             "email",
             "points",
+            "profile_image",
         )
 
     def validate_email(self, value):
@@ -62,9 +64,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     def get_followings(self, obj):
         return [user.username for user in obj.followings.all()]
-    
-    def get_followers(self, obj):  
-        return [user.username for user in obj.followers.all()]  
+
+    def get_followers(self, obj):
+        return [user.username for user in obj.followers.all()]
 
     def get_followings_count(self, obj):
         return obj.followings.count()

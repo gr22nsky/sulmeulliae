@@ -62,7 +62,6 @@ class ReviewSerializer(serializers.ModelSerializer):
             "likes",
             "updated_at",
         )
-        read_only_fields = ("evaluation", "author")
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
