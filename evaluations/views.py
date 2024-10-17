@@ -34,12 +34,12 @@ class EvaluationListAPIView(APIView):
             evaluations = evaluations.filter(
                 Q(title__icontains=search_query) | Q(content__icontains=search_query)
             )
-        # 페이지네이션
-        page = request.GET.get("page", 1)  # 기본값을 1로 설정
-        paginator = Paginator(evaluations, 10)
-        evaluations = paginator.page(page)
-        if not evaluations:
-            return Response({"해당하는 평가가 없습니다."}, status=404)
+        # # 페이지네이션
+        # page = request.GET.get("page", 1)  # 기본값을 1로 설정
+        # paginator = Paginator(evaluations, 10)
+        # evaluations = paginator.page(page)
+        # if not evaluations:
+        #     return Response({"해당하는 평가가 없습니다."}, status=404)
 
         serializer = EvaluationSerializer(evaluations, many=True)
         return Response(serializer.data)
@@ -93,12 +93,12 @@ class ReviewListAPIView(APIView):
             reviews = reviews.order_by("-like_count", "-created_at")
         else:
             reviews = reviews.order_by("-created_at")
-        # 페이지네이션
-        page = request.GET.get("page", 1)  # 기본값을 1로 설정
-        paginator = Paginator(reviews, 10)
-        reviews = paginator.page(page)
-        if not reviews:
-            return Response({"해당하는 리뷰가 없습니다."}, status=404)
+        # # 페이지네이션
+        # page = request.GET.get("page", 1)  # 기본값을 1로 설정
+        # paginator = Paginator(reviews, 10)
+        # reviews = paginator.page(page)
+        # if not reviews:
+        #     return Response({"해당하는 리뷰가 없습니다."}, status=404)
 
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
