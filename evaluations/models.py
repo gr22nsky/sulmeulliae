@@ -94,7 +94,8 @@ class Review(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reviews"
     )
     content = models.TextField()
-    rating = models.CharField(max_length=1, choices=ratings)
+    # rating = models.CharField(max_length=1, choices=ratings)
+    rating = models.IntegerField(choices=ratings)
     likes = models.ManyToManyField(
         settings.AUTH_USER_MODEL, blank=True, related_name="like_review"
     )

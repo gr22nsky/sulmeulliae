@@ -222,7 +222,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 #     'https://api.sulmeulliae.com',
 #     'https://sulmeulliae.com'
 # ]
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
 
 OPENAI_API_KEY = env('OPENAI_API_KEY')
@@ -231,7 +231,6 @@ OPENAI_API_KEY = env('OPENAI_API_KEY')
 CSRF_TRUSTED_ORIGINS = [
     'https://api.sulmeulliae.com',
     'https://sulmeulliae.com',
-    'https://localhost:3000',
 ]
 
 # ASGI 설정
@@ -243,6 +242,30 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'django_error.log'),
+
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'ERROR',
+            'propagate': True,
         },
     },
 }

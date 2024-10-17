@@ -9,7 +9,9 @@ from rest_framework.permissions import AllowAny
 from .models import Evaluation, Review, ReviewSummary
 from .serializers import EvaluationSerializer, ReviewSerializer
 from datetime import timedelta
+from rest_framework import status
 import requests
+
 
 
 # Create your views here.
@@ -103,13 +105,19 @@ class ReviewListAPIView(APIView):
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
 
+
     def post(self, request, pk):
         evaluation = self.get_object(pk=pk)
-        serializer = ReviewSerializer(data=request.data)
+
+        data = request.data.copy()
+
+        serializer = ReviewSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(evaluation=evaluation, author=self.request.user)
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+            serializer.save(evaluation=evaluation, author=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ReviewDetailAPIView(APIView):

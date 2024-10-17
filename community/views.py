@@ -38,7 +38,7 @@ class CommunityListAPIView(ListCreateAPIView):
         else:
             community = self.queryset
 
-        # 검색 기능
+        # 검색기능
         search_query = request.query_params.get("search", None)
         if search_query:
             community = community.filter(
@@ -46,9 +46,12 @@ class CommunityListAPIView(ListCreateAPIView):
                 | Q(author__username__icontains=search_query)
                 | Q(content__icontains=search_query)
             )
+        else:
+            Response({"messages": "검색결과가 없습니다."}, status=200)
 
-        # 정렬 기능
+        # 정렬기능
         sort = request.query_params.get("sort", None)
+
         if sort == "popular":
             community = community.order_by("-view_count")
         elif sort == "title":
@@ -62,14 +65,14 @@ class CommunityListAPIView(ListCreateAPIView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.serializer_class = CommunityCreateSerializer 
+        self.serializer_class = CommunityCreateSerializer
+        images = request.FILES.getlist("images")
+
         return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        images = self.request.FILES.getlist("community_image") 
+        images = self.request.FILES.getlist("images")
         community = serializer.save(author=self.request.user)
-
-        # 이미지 저장
         for image in images:
             Image.objects.create(community=community, image_url=image)
 
@@ -110,7 +113,7 @@ class CommunityDetailAPIView(UpdateAPIView):
     # 이미지 수정 로직
     def perform_update(self, serializer):
         instance = serializer.instance
-        images_data = self.request.FILES.getlist("community_image")
+        images_data = self.request.FILES.getlist("images")
 
         # 요청에 이미지가 포함된 경우
         if images_data:
@@ -121,11 +124,12 @@ class CommunityDetailAPIView(UpdateAPIView):
         serializer.save()
 
     def delete(self, request, pk):
-        community = get_object_or_404(Community, pk=pk)
         author = community.author
         user = request.user
         if user != author:
             return Response({"error": "이 글을 쓴 본인이 아닙니다."}, status=403)
+        
+        community = get_object_or_404(Community, pk=pk)
         self.check_object_permissions(request, community)
         community.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
