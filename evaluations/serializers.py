@@ -63,4 +63,3 @@ class ReviewSerializer(serializers.ModelSerializer):
             "likes",
             "updated_at",
         )
-        read_only_fields = ("evaluation", "author")

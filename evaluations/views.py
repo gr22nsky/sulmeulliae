@@ -106,8 +106,8 @@ class ReviewListAPIView(APIView):
     def post(self, request, pk):
         evaluation = self.get_object(pk=pk)
         serializer = ReviewSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(evaluation=evaluation, author=request.user)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(evaluation=evaluation, author=self.request.user)
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
@@ -123,6 +123,7 @@ class ReviewDetailAPIView(APIView):
 
     def put(self, request, pk):
         review = get_object_or_404(Review, pk=pk)
+        author = review.author
         serializer = ReviewSerializer(review, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
