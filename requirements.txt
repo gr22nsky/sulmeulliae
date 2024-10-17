@@ -24,7 +24,6 @@ configobj
 constantly
 cryptography
 daphne
-dbus-python
 decorator
 distro
 distro-info
