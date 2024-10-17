@@ -182,7 +182,7 @@ class CommentListAPIView(ListCreateAPIView):
 
         # comments = self.queryset
         serializer = CommentSerializer(comments, many=True)
-        정렬기능
+        #정렬기능
         sort = request.query_params.get("sort", None)
         if sort == "like":
             comment = comment.order_by("-like_count")
