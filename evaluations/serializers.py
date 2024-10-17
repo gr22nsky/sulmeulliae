@@ -49,7 +49,8 @@ class EvaluationSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-
+    evaluation = serializers.StringRelatedField()
+    author = serializers.StringRelatedField()
     class Meta:
         model = models.Review
         fields = (
@@ -63,9 +64,3 @@ class ReviewSerializer(serializers.ModelSerializer):
             "updated_at",
         )
         read_only_fields = ("evaluation", "author")
-
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        ret["evaluation"] = instance.evaluation.title
-        ret["author"] = instance.author.username
-        return ret
