@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "community",
     "chatbot",
     "chat",
+    "products",
 ]
 
 SITE_ID = 1
@@ -227,6 +228,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 OPENAI_API_KEY = env('OPENAI_API_KEY')
 
+PORT_ONE_API_KEY = env("PORT_ONE_API_KEY")
+PORT_ONE_SECRET_KEY = env("PORT_ONE_SECRET_KEY")
 
 CSRF_TRUSTED_ORIGINS = [
     'https://api.sulmeulliae.com',
@@ -245,3 +248,27 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# 로그가 필요하면 이용해보자^^
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#         'file': {
+#             'level': 'ERROR',
+#             'class': 'logging.FileHandler',
+#             'filename': os.path.join(BASE_DIR, 'logs', 'django_error.log'),
+
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console', 'file'],
+#             'level': 'ERROR',
+#             'propagate': True,
+#         },
+#     },
+# }

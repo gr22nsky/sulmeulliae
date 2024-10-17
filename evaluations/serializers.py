@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from . import models
-
+from accounts.models import User
 
 class ImageSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(use_url=True)
@@ -49,22 +49,15 @@ class EvaluationSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    rating = serializers.IntegerField()  # CharField에서 IntegerField로 변경
+    evaluation = serializers.StringRelatedField(read_only=True)
+    author = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = models.Review
-        fields = (
-            "id",
-            "evaluation",
-            "author",
-            "content",
-            "rating",
-            "like_count",
-            "likes",
-            "updated_at",
-        )
-
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        ret["evaluation"] = instance.evaluation.title
-        ret["author"] = instance.author.username
-        return ret
+        fields = ['id', 'evaluation', 'author', 'content', 'rating', 'likes', 'like_count', 'updated_at']
+        extra_kwargs = {
+            'likes': {'read_only': True},  # likes 필드가 ManyToMany 관계일 때 read_only 설정
+            'evaluation': {'read_only': True},
+            'author': {'read_only': True}
+        }

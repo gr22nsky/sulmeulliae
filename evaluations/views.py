@@ -9,6 +9,7 @@ from rest_framework.permissions import AllowAny
 from .models import Evaluation, Review, ReviewSummary
 from .serializers import EvaluationSerializer, ReviewSerializer
 from datetime import timedelta
+from rest_framework import status
 import requests
 
 
@@ -103,13 +104,19 @@ class ReviewListAPIView(APIView):
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
 
+
     def post(self, request, pk):
         evaluation = self.get_object(pk=pk)
-        serializer = ReviewSerializer(data=request.data)
-        if serializer.is_valid():
+
+        data = request.data.copy()
+
+        serializer = ReviewSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
             serializer.save(evaluation=evaluation, author=request.user)
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ReviewDetailAPIView(APIView):
@@ -122,14 +129,15 @@ class ReviewDetailAPIView(APIView):
         return Response(serializer.data)
 
     def put(self, request, pk):
-        review = self.get_object_or_404(Review, pk=pk)
+        review = get_object_or_404(Review, pk=pk)
+        author = review.author
         serializer = ReviewSerializer(review, data=request.data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
 
     def delete(self, request, pk):
-        review = self.get_object_or_404(Review, pk=pk)
+        review = get_object_or_404(Review, pk=pk)
         if review.author != request.user:
             return Response({"작성자만 리뷰를 삭제할수있습니다."}, status=403)
         review.delete()
