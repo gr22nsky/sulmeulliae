@@ -40,7 +40,6 @@ docker
 docker-compose
 dockerpty
 docopt
-ec2-hibinit-agent
 exceptiongroup
 executing
 Faker
