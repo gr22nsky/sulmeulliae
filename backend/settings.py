@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "community",
     "chatbot",
     "chat",
+    "products",
 ]
 
 SITE_ID = 1
@@ -222,11 +223,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 #     'https://api.sulmeulliae.com',
 #     'https://sulmeulliae.com'
 # ]
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 OPENAI_API_KEY = env('OPENAI_API_KEY')
 
+PORT_ONE_API_KEY = env("PORT_ONE_API_KEY")
+PORT_ONE_SECRET_KEY = env("PORT_ONE_SECRET_KEY")
 
 CSRF_TRUSTED_ORIGINS = [
     'https://api.sulmeulliae.com',
