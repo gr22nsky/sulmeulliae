@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "evaluations",
     "community",
     "chatbot",
+    "products",
 ]
 
 MIDDLEWARE = [
@@ -185,7 +186,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 #     'https://api.sulmeulliae.com',
 #     'https://sulmeulliae.com'
 # ]
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True
 
 # CORS_ALLOW_HEADERS = [
 #     "content-type",
@@ -194,6 +195,8 @@ CORS_ALLOW_ALL_ORIGINS = False
 
 OPENAI_API_KEY = env('OPENAI_API_KEY')
 
+PORT_ONE_API_KEY = env("PORT_ONE_API_KEY")
+PORT_ONE_SECRET_KEY = env("PORT_ONE_SECRET_KEY")
 
 CSRF_TRUSTED_ORIGINS = [
     'https://api.sulmeulliae.com',
