@@ -17,9 +17,10 @@ jobs:
           port: 22
           script: |
             cd /home/ubuntu/sulmeulliae
-            git pull origin dev
+            sudo git pull origin dev
             pip install -r requirements.txt
             sudo docker-compose up -d --build
             sudo python3 manage.py migrate
             sudo systemctl restart nginx
             sudo systemctl restart gunicorn
+            sudo systemctl restart daphne

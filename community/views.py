@@ -176,19 +176,19 @@ class CommentListAPIView(ListCreateAPIView):
             .exclude(author__in=user.blinded_user.all())
             .first()
         )
-        comments = Comment.objects.filter(community_id=pk, is_deleted=False).exclude(
+        comments = Comment.objects.filter(community=community, is_deleted=False).exclude(
             author__in=user.blinded_user.all()
         )
 
-        comments = self.queryset
+        # comments = self.queryset
         serializer = CommentSerializer(comments, many=True)
         #정렬기능
-        sort = request.query_params.get("sort", None)
-        if sort == "like":
-            comment = comment.order_by("-like_count")
-        else:
-            comment = comment.order_by("-created_at")
-        self.queryset = comment
+        # sort = request.query_params.get("sort", None)
+        # if sort == "like":
+        #     comment = comment.order_by("-like_count")
+        # else:
+        #     comment = comment.order_by("-created_at")
+        # self.queryset = comment
         return Response(serializer.data, status=200)
 
     def post(self, request, pk):
