@@ -9,7 +9,7 @@ from django.contrib.auth.tokens import default_token_generator
 def send_verification_email(user):
     token = generate_activation_token(user)
     uid = encode_uid(user)
-    activation_link = f"http://localhost:3000/accounts/verify-email/{uid}/{token}/"
+    activation_link = f"https://sulmeulliae.com/accounts/verify-email/{uid}/{token}/"
 
     subject = "sulmeulliae 이메일 인증"
     message = f"가입을 환영합니다. 아래 링크를 클릭하여 이메일을 인증하세요:\n{activation_link}"
