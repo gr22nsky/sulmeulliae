@@ -180,7 +180,7 @@ class CommentListAPIView(ListCreateAPIView):
             author__in=user.blinded_user.all()
         )
 
-        # comments = self.queryset
+        comments = self.queryset
         serializer = CommentSerializer(comments, many=True)
         #정렬기능
         sort = request.query_params.get("sort", None)
