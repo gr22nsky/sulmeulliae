@@ -124,12 +124,12 @@ class CommunityDetailAPIView(UpdateAPIView):
         serializer.save()
 
     def delete(self, request, pk):
+        community = get_object_or_404(Community, pk=pk)
         author = community.author
         user = request.user
         if user != author:
             return Response({"error": "이 글을 쓴 본인이 아닙니다."}, status=403)
         
-        community = get_object_or_404(Community, pk=pk)
         self.check_object_permissions(request, community)
         community.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
