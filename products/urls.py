@@ -6,7 +6,7 @@ from .views import (
     ProductDetailView,
     CartView,
     KakaoPayCartReadyView,
-    KakaoPayCartApproveView,
+    KakaoPayCartApproveView, UserOrderItemsView,
 )
 
 urlpatterns = [
@@ -14,6 +14,7 @@ urlpatterns = [
     path("<uuid:product_id>/", ProductDetailView.as_view(), name="product-detail"),
     path("cart/", CartView.as_view(), name="cart"),
     path("cart/<int:item_id>/", CartView.as_view(), name="cart-delete"),
+    path("orders/items/", UserOrderItemsView.as_view(), name="user-order-items"),
     path(
         "payment/kakaopay-cart/ready/",
         KakaoPayCartReadyView.as_view(),
@@ -30,5 +31,4 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
-# path('payment/kakaopay/ready/', KakaoPayReadyView.as_view(), name='kakao-pay-ready'),
-# path('payment/kakaopay/approve/', KakaoPayApproveView.as_view(), name='kakao-pay-approve'),
+
