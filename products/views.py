@@ -1,13 +1,14 @@
 import uuid
 import requests
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import (
     ProductSerializer,
     CartSerializer,
-    CartItemSerializer,
+    CartItemSerializer, OrderItemSerializer,
 )
 from .models import Cart, CartItem, Product, Order, OrderItem
 from .utils import get_port_one_token
@@ -89,6 +90,20 @@ class CartView(APIView):
             {"message": "Product removed from cart", "item": serializer.data},
             status=status.HTTP_204_NO_CONTENT,
         )
+
+
+class UserOrderItemsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        orders = Order.objects.filter(user=user, is_paid=True)
+        if not orders.exists():
+            return Response({"message": "구매한 상품이 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+
+        order_items = OrderItem.objects.filter(order__in=orders)
+        serializer = OrderItemSerializer(order_items, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class KakaoPayCartReadyView(APIView):
@@ -177,80 +192,6 @@ class KakaoPayCartReadyView(APIView):
             )
 
 
-# class KakaoPayCartReadyView(APIView):
-#     def post(self, request):
-#         order_data = request.data
-#         products = order_data.get("products", [])
-#         total_price = 0
-#         order_items = []
-#
-#         for item in products:
-#             product_id = item.get("product_id")
-#             quantity = item.get("quantity", 1)
-#             product = get_object_or_404(Product, id=product_id)
-#             item_price = product.price * quantity
-#             total_price += item_price
-#
-#             order_items.append(
-#                 {
-#                     "product": product,
-#                     "quantity": quantity,
-#                     "total_price": item_price,
-#                 }
-#             )
-#
-#         if total_price == 0:
-#             return Response(
-#                 {"error": "결제할 상품이 없습니다."}, status=status.HTTP_400_BAD_REQUEST
-#             )
-#
-#         order = Order.objects.create(
-#             user=request.user,
-#             total_price=total_price,
-#             buyer_name=request.user.username,
-#             merchant_uid=str(uuid.uuid4()),
-#         )
-#
-#         for item in order_items:
-#             OrderItem.objects.create(
-#                 order=order,
-#                 product=item["product"],
-#                 quantity=item["quantity"],
-#                 total_price=item["total_price"],
-#             )
-#
-#         token = get_port_one_token()
-#
-#         prepare_url = "https://api.iamport.kr/payments/prepare"
-#         headers = {
-#             "Authorization": f"Bearer {token}",
-#             "Content-Type": "application/json",
-#         }
-#         prepare_data = {
-#             "merchant_uid": order.merchant_uid,
-#             "amount": float(total_price),
-#         }
-#
-#         prepare_response = requests.post(
-#             prepare_url, json=prepare_data, headers=headers
-#         )
-#         prepare_result = prepare_response.json()
-#         print(prepare_result)
-#         if prepare_result.get("code") == 0:
-#             return Response(
-#                 {
-#                     "merchant_uid": order.merchant_uid,
-#                     "amount": total_price,
-#                 },
-#                 status=status.HTTP_200_OK,
-#             )
-#         else:
-#             return Response(
-#                 {"error": prepare_result.get("message", "결제 준비 중 오류 발생")},
-#                 status=status.HTTP_400_BAD_REQUEST,
-#             )
-
-
 class KakaoPayCartApproveView(APIView):
     @transaction.atomic
     def post(self, request):
@@ -308,6 +249,9 @@ class KakaoPayCartApproveView(APIView):
 
                     product.stock -= item.quantity
                     product.save()
+
+                CartItem.objects.filter(cart__user=request.user,
+                                        product__in=[item.product for item in order_items]).delete()
 
                 return Response(
                     {"message": "결제가 성공적으로 승인되었습니다."},
