@@ -130,6 +130,8 @@ class UserProfileAPIView(APIView):
 
     def get(self, request, username):
         user = get_object_or_404(User, username=username, is_active=True)
+        if request.user != user:
+            return Response({"message": "유저정보는 본인의 것만 확인할 수 있습니다"}, status=401)
         # User 객체 직렬화(JSON)
         serializer = UserProfileSerializer(user)
         return Response(serializer.data)
