@@ -213,6 +213,8 @@ class BlindAPIView(APIView):
 class UserLikesAPIView(APIView):
     def get(self, request, username):
         user = get_object_or_404(User, username=username)
+        if request.user != user:
+            return Response({"message": "유저정보는 본인의 것만 확인할 수 있습니다"}, status=401)
 
         liked_evaluations = Evaluation.objects.filter(likes=user)
         liked_reviews = Review.objects.filter(likes=user)
