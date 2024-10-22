@@ -36,7 +36,7 @@
     - 팔로우/팔로잉
       ![image](https://github.com/user-attachments/assets/41018286-e2ec-4b75-becf-eb04acb463c5)
     - 블라인드
-      ![image](https://github.com/user-attachments/assets/b7be7796-07d8-4ba9-b430-70ef53900e71)
+      ![image](https://github.com/user-attachments/assets/ac04560f-0183-4a57-8b49-dbc0c0f8ea16)
 
 
 ## 💭 기술적 의사결정
