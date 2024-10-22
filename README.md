@@ -58,7 +58,7 @@
 - **DevOps**: Docker, Docker Compose, GitHub Actions, Portone (결제 시스템)
 
 ## 🔗 프로젝트 구조
-
+├── accounts ├── chatbot ├── community ├── evaluations ├── products ├── chat ├── static ├── templates ├── manage.py └── requirements.txt
 
 ## 🗂 Git 컨벤션
 
