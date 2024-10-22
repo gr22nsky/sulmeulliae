@@ -4,6 +4,7 @@
 
 ## 📜 프로젝트 개요
 
+- **프로젝트일정**: 
 - **프로젝트명**: 술믈리愛
 - **목표**: 술을 단순한 음료가 아닌, 문화와 예술로 탐구하는 커뮤니티 플랫폼을 제공
 - **주요 기능**:
@@ -13,6 +14,30 @@
     - 실시간 채팅 기능 (술친구 채팅방)
     - AI 기반 술 추천 챗봇
     - 이달의 술 판매 및 결제 기능
+
+## 📜 ERDiagram
+
+![image](https://github.com/user-attachments/assets/a783a808-ff8b-4859-9ace-110222fc0ea4)
+
+## 📜 Process Flow
+
+- **기본 기능**
+![image](https://github.com/user-attachments/assets/4430a14f-9417-4263-8f1c-e2e6c4b6f6f0)
+
+- **추가 기능**
+    - 술친구실시간채팅
+      ![image](https://github.com/user-attachments/assets/cd125e15-1a35-4086-9fe1-98f2ab0dab84)
+    - 술추천챗봇
+      ![image](https://github.com/user-attachments/assets/b34733fc-a8b5-4d93-b6d7-04e04af340ba)
+    - 이달의 술 판매
+      ![image](https://github.com/user-attachments/assets/22e7500f-e556-46b8-a4f9-d3c5de5b2510)
+    - 리뷰 요약
+      ![image](https://github.com/user-attachments/assets/66f71a7b-ae93-4392-8d75-8aeb32a23599)
+    - 팔로우/팔로잉
+      ![image](https://github.com/user-attachments/assets/41018286-e2ec-4b75-becf-eb04acb463c5)
+    - 블라인드
+      ![image](https://github.com/user-attachments/assets/b7be7796-07d8-4ba9-b430-70ef53900e71)
+
 
 ## 💭 기술적 의사결정
 
@@ -75,33 +100,6 @@
 - **Cloud**: AWS (EC2, S3, Cloudfront, Route 53)
 - **AI**: GPT (OpenAI API), Deepl API
 - **DevOps**: Docker, Docker Compose, GitHub Actions, Portone (결제 시스템)
-
-## 🗂 Git 컨벤션
-
-1. **커밋 메시지 유형**:
-    - `feat`: 새로운 기능 추가
-    - `fix`: 버그 수정
-    - `docs`: 문서 변경
-    - `style`: 코드 포맷팅, 세미콜론 누락 등
-    - `refactor`: 코드 리팩토링
-    - `test`: 테스트 추가
-    - `chore`: 빌드 과정, 보조 도구 변경
-
-2. **브랜치 네이밍 규칙**:
-    - `feature/{기능명}`
-    - 커밋은 작은 단위로 자주 남길 것
-
-3. **Merge 규칙**:
-    - `dev` 브랜치에 우선 merge, 배포 시 `main`에 merge
-
-## 📝 코드 컨벤션
-
-- **Import 정리**: 표준 라이브러리, 외부 라이브러리, 로컬 모듈 순으로 그룹화
-- **Formatter**: `black`을 이용해 PEP8 규칙 준수
-
-## 🗓 프로젝트 일정
-
-- **개발 시작**: 2024-09-23
 
 ## 📦 배포 및 API 문서
 
