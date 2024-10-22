@@ -118,7 +118,7 @@
 - **AI**: GPT (OpenAI API), Deepl API
 - **DevOps**: Docker, Docker Compose, GitHub Actions, Portone (결제 시스템)
 
-## 📦 배포 및 API 문서
+## 📦 기술 문서
 
 - [API 명세](https://www.notion.so/fff2dc3ef51481afabb9c8484b5e0fa4?pvs=21)
 - [트러블 슈팅](https://www.notion.so/f294f4a8c28243aab3860bf7bb2e929e?pvs=21)
