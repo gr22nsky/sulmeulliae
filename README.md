@@ -138,10 +138,9 @@
 > Django Admin을 기반으로 제공되는 관리 인터페이스로, 개발자가 별도의 코드를 작성하지 않고도 데이터를 쉽게 관리할 수 있기 때문에 저희처럼 개발 기간이 짧은 프로젝트에 더 용이하다고 느꼈고, 커스터마이징을 통해 각 프로젝트에 맞는 관리 도구를 구축할 수 있으므로 효율적인 데이터 관리와 운영 지원을 위해 사용하게 되었습니다.
 
 
-### ◻ Github Actions & Code Deploy (CI/CD) _ BE
+### ◻ Github Actions (CI/CD) _ BE
 
-> 자동 빌드/배포를 위하여 깃허브 액션과 코드디플로이를 활용하여 CI/CD 를 구축했습니다.         
-> [AWS CodeDeploy](https://github.com/HH9C4/BBBB-BE/wiki/%5BTech%5D-AWS-CodeDeploy)
+> 자동 빌드/배포를 위하여 깃허브를 활용하여 CI/CD 를 구축했습니다.         
 
 ### ◻ Google SMTP _ BE
 
