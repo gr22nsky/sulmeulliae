@@ -80,12 +80,12 @@ class EvaluationImage(models.Model):
 
 class Review(models.Model):
     ratings = [
-        ("5", "★★★★★"),
-        ("4", "★★★★"),
-        ("3", "★★★"),
-        ("2", "★★"),
-        ("1", "★"),
-        ("0", "☆"),
+        (5, "★★★★★"),
+        (4, "★★★★"),
+        (3, "★★★"),
+        (2, "★★"),
+        (1, "★"),
+        (0, "☆"),
     ]
     evaluation = models.ForeignKey(
         Evaluation, on_delete=models.CASCADE, related_name="reviews"
