@@ -13,21 +13,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 환경 변수 설정
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
-# Set the project base directory
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-#
-# # Take environment variables from .env file
-# environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-# False if not in os.environ because of casting above
 DEBUG = env('DEBUG')
-print(DEBUG)
-# Raises Django's ImproperlyConfigured
-# exception if SECRET_KEY not in os.environ
+
 SECRET_KEY = env('SECRET_KEY')
 OPEN_API_KEY = env('OPENAI_API_KEY')
 DEEPL_API_KEY= env('DEEPL_API_KEY')
-# ALLOWED_HOSTS = ['api.sulmeulliae.com', '43.201.83.17', 'sulmeulliae.com', '127.0.0.1']
 
 
 ALLOWED_HOSTS = ["*"]
@@ -197,11 +188,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-
-# STATIC_URL = env("STATIC_URL", default="/static/")
-# STATICFILES_DIRS = [BASE_DIR / "static"]
-# STATIC_ROOT = env("STATIC_ROOT", default=BASE_DIR / "staticfiles")
-
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
@@ -209,8 +195,6 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # # Media files
-# MEDIA_URL = env("MEDIA_URL", default="/media/")
-# MEDIA_ROOT = env("MEDIA_ROOT", default=BASE_DIR / "media")
 MEDIA_URL = '/media/'  # 미디어 파일을 접근할 URL 경로
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # 미디어 파일이 저장될 디렉토리 경로
 # Default primary key field type
@@ -218,11 +202,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # 미디어 파일이 저장될 �
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# CORS_ALLOWED_ORIGINS = [
-#     'https://localhost:3000',
-#     'https://api.sulmeulliae.com',
-#     'https://sulmeulliae.com'
-# ]
 CORS_ALLOW_ALL_ORIGINS = False
 
 
@@ -248,27 +227,3 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
-# 로그가 필요하면 이용해보자^^
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#         },
-#         'file': {
-#             'level': 'ERROR',
-#             'class': 'logging.FileHandler',
-#             'filename': os.path.join(BASE_DIR, 'logs', 'django_error.log'),
-
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['console', 'file'],
-#             'level': 'ERROR',
-#             'propagate': True,
-#         },
-#     },
-# }
